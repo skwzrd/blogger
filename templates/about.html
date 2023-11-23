@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+  <div class="mt-2 card bg-dark">
+    <div class="card-header">{{CONSTS.site_name}}</div>
+    <div class="card-body">
+      {{CONSTS.about}}
+    </div>
+    <div class="card-body">
+      {{CONSTS.contact}}
+    </div>
+  </div>
+
+  {% if not logged_in %}
+    <div class="mt-2 card bg-dark">
+      <div class="card-header">Administrators</div>
+      <div class="card-body">
+        Administrators may log in <a href="{{ url_for('login') }}">here</a>.
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}

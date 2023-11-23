@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <div class="mt-2 card bg-dark">
+
+        <div class="card-header">
+            <h2>{{post.title}}</h2>
+            <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
+        </div>
+
+        {% if post.text %}
+            <div class="card-body">
+                {{post.text | safe}}
+            </div>
+        {% endif %}
+
+        {% include 'file_downloads.html' %}
+
+        <div class="card-footer">
+            <div>
+                {% if post.tags %}
+                    Tags: {% include 'tag_links.html' %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

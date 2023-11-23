@@ -1,0 +1,88 @@
+:root {
+  --font_colour: #eeeeee;
+  --font_colour_shaded: #bbbbbb;
+  --background: #1b1b1b;
+}
+
+.font_color {
+  color: var(--font_colour);
+  border-color: var(--font_colour) !important;
+}
+
+body {
+  background: var(--background);
+  color: var(--font_colour);
+  font-family: Segoe UI, sans-serif;
+  font-size: 12pt;
+  max-width: 1600px;
+  margin: 2rem;
+}
+
+a {
+  text-decoration: none;
+  color: var(--font_colour);
+  letter-spacing: 1px;
+}
+
+a:visited {
+  color: var(--font_colour);
+}
+
+a:hover {
+  color: var(--font_colour_shaded);
+}
+
+div {
+  display: block;
+  flex-wrap: wrap;
+}
+
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background-color: var(--background);
+  margin-top: 5px;
+  max-width: 100%;
+  max-height: 30ch;
+  border-radius: 4px;
+  border: 1px solid var(--font_colour);
+}
+
+input[type=number] {
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background-color: #2c2c2c;
+  margin-top: 5px;
+  width: 1ch;
+  max-height: 30ch;
+  border: 1px solid var(--font_colour);
+  -moz-appearance: textfield;
+  appearance: textfield;
+  text-align: center;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+html,
+body,
+.form-control,
+.form-check-input,
+textarea,
+text,
+.gm-style-iw-d,
+.gm-style-iw,
+.gm-style-iw-c,
+select,
+option {
+  color-scheme: var(--font_colour) !important;
+  background-color: var(--background) !important;
+  color: var(--font_colour) !important;
+  border-color: var(--card-border-color);
+}

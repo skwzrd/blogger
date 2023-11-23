@@ -1,0 +1,8 @@
+{% if post and post.files %}
+    <div class="card-body">
+        Shared files:
+        {% for file in post.files %}
+            <a href="{{'/{}'.format(file.file_path)}}" class="btn border-danger text-danger ps-2 pe-2"><small>{{file.file_name}}</small></a>
+        {% endfor %}
+    </div>
+{% endif %}

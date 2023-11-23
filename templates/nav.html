@@ -1,0 +1,29 @@
+<div class="rounded">
+  <div class="collapse show pb-2">
+    <a href="{{CONSTS.site_url}}"><img id="logo" style="width: 50vw; max-width: 250px;" class="d-none d-sm-block rounded d-inline-block align-top" src="{{CONSTS.site_logo_url}}"/></a>
+    <a href="{{CONSTS.site_url}}"><img id="logo" style="width: 50vw; max-width: 250px;" class="border border-1 border-primary d-block d-sm-none rounded mx-auto" src="{{CONSTS.site_logo_url}}"/></a>
+  </div>
+</div>
+
+<nav class="rounded navbar navbar-expand-sm navbar-dark bg-dark pe-2">
+
+  <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbar">
+    <div class="navbar-nav">
+
+      {% if logged_in %}
+        <a class="nav-link link-light ps-3" href="{{ url_for('post_list') }}">Posts</a>
+        <a class="nav-link link-light ps-3" href="{{ url_for('users') }}">Users</a>
+        <a class="nav-link link-light ps-3" href="{{ url_for('post_create') }}">New Post</a>
+        <a class="nav-link link-light ps-3" href="{{ url_for('about') }}">About</a>
+        <a class="nav-link link-light ps-3" href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a class="nav-link link-light ps-3" href="{{ url_for('post_list') }}">Posts</a>
+        <a class="nav-link link-light ps-3" href="{{ url_for('about') }}">About</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

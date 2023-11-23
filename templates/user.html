@@ -1,0 +1,23 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <div class="mt-2 card bg-dark">
+        <div class="card-header">
+            {% if user %}
+                User {{user.username}} #{{user.id}}
+            {% else %}
+                New user
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if user %}
+                {{render_form(form, action="/user_edit/{}".format(user.id), method="post", novalidate=True, id="main_form", button_style="btn btn-md btn-primary mt-2")}}
+            {% else %}
+                {{render_form(form, action="/user_create", method="post", novalidate=True, id="main_form", button_style="btn btn-md btn-primary mt-2")}}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
