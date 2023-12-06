@@ -1,2 +1,7 @@
 __pycache__/
 venv/
+configs.py
+*.db
+secret.txt
+static/uploads/*
+*.gif

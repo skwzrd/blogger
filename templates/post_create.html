@@ -1,0 +1,19 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <div class="mt-2 card">
+        <div class="card-header">
+            New Post
+        </div>
+
+        <div class="card-body">
+            {{render_form(form, action="/post_create", method="post", novalidate=True, id="main_form", button_style="btn btn-md btn-primary mt-2")}}
+        </div>
+    </div>
+
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='text', file_uploader=url_for('bp_post.upload')) }}
+
+{% endblock %}

@@ -1,88 +1,95 @@
 :root {
-  --font_colour: #eeeeee;
-  --font_colour_shaded: #bbbbbb;
+  --font_color: #b8948b;
+  --link_color: #b8948b;
+  --font_color_shaded: #b17a6c;
+  --font_color_highlight: #06b382;
   --background: #1b1b1b;
+  --background-light: #222222;
+  --background-dark: #141414;
+  --border_color: #5f5f5f;
 }
 
 .font_color {
-  color: var(--font_colour);
-  border-color: var(--font_colour) !important;
+  color: var(--font_color) !important;
+  background: var(--background) !important;
+  border-color: var(--border_color) !important;
 }
 
-body {
-  background: var(--background);
-  color: var(--font_colour);
-  font-family: Segoe UI, sans-serif;
-  font-size: 12pt;
-  max-width: 1600px;
-  margin: 2rem;
+.font_color_shaded {
+  color: var(--font_color_shaded) !important;
+  border-color: var(--border_color) !important;
 }
+
+.font_color_highlight {
+  color: var(--font_color_highlight) !important;
+  border-color: var(--border_color) !important;
+}
+
 
 a {
-  text-decoration: none;
-  color: var(--font_colour);
-  letter-spacing: 1px;
+  color: var(--font_color);
+  margin: 0 !important;
 }
 
 a:visited {
-  color: var(--font_colour);
+  color: var(--font_color);
 }
 
 a:hover {
-  color: var(--font_colour_shaded);
+  color: var(--font_color);
 }
 
-div {
-  display: block;
-  flex-wrap: wrap;
+a.btn>svg {
+  color: var(--link_color);
 }
 
-textarea {
+a.btn>svg :visited {
+  color: var(--link_color);
+}
+
+a.btn>svg :hover {
+  color: var(--link_color);
+}
+
+input[type=file],
+.form-check-input,
+.form-control,
+.form-control:active,
+.form-control:focus {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-  background-color: var(--background);
+  background-color: var(--background-dark);
   margin-top: 5px;
   max-width: 100%;
-  max-height: 30ch;
   border-radius: 4px;
-  border: 1px solid var(--font_colour);
-}
-
-input[type=number] {
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  background-color: #2c2c2c;
-  margin-top: 5px;
-  width: 1ch;
-  max-height: 30ch;
-  border: 1px solid var(--font_colour);
-  -moz-appearance: textfield;
-  appearance: textfield;
-  text-align: center;
-}
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+  border: 1px solid var(--border_color);
 }
 
 html,
-body,
-.form-control,
-.form-check-input,
-textarea,
-text,
-.gm-style-iw-d,
-.gm-style-iw,
-.gm-style-iw-c,
-select,
-option {
-  color-scheme: var(--font_colour) !important;
+body {
+  color-scheme: var(--font_color) !important;
   background-color: var(--background) !important;
-  color: var(--font_colour) !important;
-  border-color: var(--card-border-color);
+  color: var(--font_color) !important;
+  border-color: var(--border_color);
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+table,
+.table,
+.card,
+.btn,
+.dropdown-menu {
+  color: var(--font_color);
+  background-color: var(--background-light);
+  border-color: var(--border_color);
+}
+
+.card-header {
+  color: var(--font_color);
+  background-color: var(--background-dark);
 }

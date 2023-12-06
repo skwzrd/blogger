@@ -1,8 +1,8 @@
 Flask>=3
-isort
-djhtml
 flask-ckeditor
 sqlalchemy>=2
 bootstrap-flask
 flask-sqlalchemy
 flask-wtf
+flask_limiter[redis]
+gunicorn

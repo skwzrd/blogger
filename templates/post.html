@@ -2,11 +2,27 @@
 
 {% block body %}
 
-    <div class="mt-2 card bg-dark">
+    <div class="mt-2 card">
 
         <div class="card-header">
-            <h2>{{post.title}}</h2>
-            <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
+            {% if is_admin %}
+                <div class="d-flex">
+                    <div>
+                        <h3 class="container mt-2">{{post.title}}</h3>
+                        <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
+                    </div>
+
+                    <div class="container">
+                        <div class="d-flex justify-content-end">
+                            {% include 'post_edit_link.html' %}
+                            {% include 'post_delete_button.html' %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <h2>{{post.title}}</h2>
+                <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
+            {% endif %}
         </div>
 
         {% if post.text %}

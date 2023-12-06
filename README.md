@@ -8,56 +8,59 @@ A simple blog written with Flask. It currently features,
 - File attachments
 - CKEditor for a WYSIWYG blogging experience with image upload support. 
     - Video and other file types can be embedded by clicking the source button - just upload file attachments, and reference them.
+- Cascade deletions for tags and files
+- Decoupled configs
 
 Features still missing,
 
-- Cascade deletions for tags and files
-- Decoupled configs
 - Commenting on posts
+- File attachment deletions
 
 
 ## Preview
 
 See a collection of screenshots [here](resources/README.md).
 
+
 ## Set up
 
 This site was developed against Python 3.10.12, so you should first have that version of Python installed. Other versions (3.11) probably work too.
 
-### Windows
-```
-git clone https://github.com/skwzrd/blogger.git
-cd blogger
-py -m venv venv
-venv\Scripts\activate.bat
-py -m pip install -r requirements.txt
-py app.py
-```
 
-### Linux
+### Linux Environment
 ```
 git clone https://github.com/skwzrd/blogger.git
 cd blogger
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
-python3 app.py
+
+sudo apt update
+sudo apt install redis-server
+sudo nano /etc/redis/redis.conf # set line `supervised no` to `supervised systemd`
+sudo systemctl restart redis
+sudo systemctl status redis
+
+
+python3 main.py
 ```
 
 
-## Site Configurations
+### Site Configurations
 
-If you want to go beyond just demoing this code,
+- Create a long, random string (`import secrets` `secrets.token_urlsafe(64)`) in a file called `secret.txt`.
+- Rename `configs_COPY.py` to `configs.py` and configure its variables.
+- Initialize a new database by running `init_database.py`, or drop-in an existing SQLite database.
+- Flush redis records `redis-cli flushall`.
 
-- Configure the variables at the top of the file `app.py`.
-- Delete the current database
-- Create a new user with solid credentials (see `app.build_db` for how to do this)
 
+### Formatting
 
-## Formatting
+Formatting libraries are not including in the production venv, so install them with `pip install djhtml isort black`.
 
-- `djhtml .`
-- `isort .`
+- `djhtml ./templates`
+- `isort ./`
+- `black --line-length=140 --target-version=py310 .`
 
 
 ## Hosting on Ubuntu
