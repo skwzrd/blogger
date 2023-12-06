@@ -1,15 +1,24 @@
 from datetime import datetime
 
 from flask_ckeditor import CKEditorField
-from flask_wtf import FlaskForm
-from werkzeug.security import check_password_hash
-from wtforms.fields import (BooleanField, DateField, DateTimeField, EmailField,
-                            MultipleFileField, PasswordField, StringField,
-                            SubmitField, TextAreaField)
-from wtforms.validators import InputRequired, Length, Optional, ValidationError
 from flask_sqlalchemy.model import Model
+from flask_wtf import FlaskForm
 from sqlalchemy import select
-from models import db, User
+from werkzeug.security import check_password_hash
+from wtforms.fields import (
+    BooleanField,
+    DateField,
+    DateTimeField,
+    EmailField,
+    MultipleFileField,
+    PasswordField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import InputRequired, Length, Optional, ValidationError
+
+from models import User, db
 
 
 def get_fields(model: Model, form: FlaskForm, submitted_form: FlaskForm):

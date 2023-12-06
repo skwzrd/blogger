@@ -1,8 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import (Flask, flash, g, redirect, render_template, request,
-                   send_from_directory, url_for)
+from flask import Flask, flash, g, redirect, render_template, request, send_from_directory, url_for
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from werkzeug.middleware.proxy_fix import ProxyFix

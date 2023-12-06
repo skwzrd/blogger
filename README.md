@@ -80,7 +80,7 @@ Group=www-data
 
 WorkingDirectory=/home/user1/blogger
 Environment="PATH=/home/user1/venv/bin"
-ExecStart=/home/user1/venv/bin/gunicorn -w 2 -b 127.0.0.1:8080 'app:app'
+ExecStart=/home/user1/venv/bin/gunicorn -w 2 -b 127.0.0.1:8080 'main:app'
 
 Type=simple
 Restart=always

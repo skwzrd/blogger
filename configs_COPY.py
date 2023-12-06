@@ -24,12 +24,12 @@ class CONSTS(NamedTuple):
 
     site_name = "site_name"
 
-    site_host = 'http://127.0.0.1'
+    site_host = "127.0.0.1"
     site_port = 8080
 
     site_url = "https://site_name.com"
     if TESTING:
-        site_url = f"{site_host}:{site_port}"
+        site_url = f"http://{site_host}:{site_port}"
 
     site_logo_url = "/static/images/logo.png"
 

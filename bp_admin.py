@@ -3,7 +3,7 @@ from sqlalchemy import select
 
 from bp_auth import AuthActions, admin_required, auth
 from configs import CONSTS
-from models import Contact, db, Log
+from models import Contact, Log, db
 
 bp_admin = Blueprint("bp_admin", __name__, template_folder="templates")
 
@@ -23,6 +23,7 @@ def admin_contacts():
         logged_in=auth(AuthActions.is_logged_in),
         is_admin=auth(AuthActions.is_admin),
     )
+
 
 @bp_admin.route("/admin_logs", methods=["GET"])
 @admin_required

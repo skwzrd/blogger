@@ -1,8 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import (Blueprint, current_app, flash, redirect, render_template,
-                   request, url_for)
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
@@ -17,7 +16,7 @@ bp_post = Blueprint("bp_post", __name__, template_folder="templates")
 
 def get_tags_from_form(form):
     # tags must be unique -- perform one extra query to meet this criteria
-    form_tags = [x.strip() for x in form.tags.data.split(',') if x and x.strip() != '']
+    form_tags = [x.strip() for x in form.tags.data.split(",") if x and x.strip() != ""]
     existing_tags = db.session.scalars(select(Tag).where(Tag.text.in_(form_tags))).all()
     existing_tags_text = [t.text for t in existing_tags]
     new_tags = [Tag(text=t) for t in form_tags if t not in existing_tags_text]
@@ -140,11 +139,7 @@ def post_read(post_id):
     if auth(AuthActions.is_logged_in):
         post = db.session.scalar(select(Post).where(Post.id == post_id))
     else:
-        post = db.session.scalar(
-            select(Post)
-            .where(Post.id == post_id)
-            .where(Post.is_published == True)
-        )
+        post = db.session.scalar(select(Post).where(Post.id == post_id).where(Post.is_published == True))
 
     if post:
         return render_template(

@@ -3,7 +3,7 @@ from sqlalchemy import select
 
 from bp_auth import AuthActions, auth
 from configs import CONSTS
-from models import Post, Tag, db, BridgeTag
+from models import BridgeTag, Post, Tag, db
 
 bp_tag = Blueprint("bp_tag", __name__, template_folder="templates")
 
@@ -17,10 +17,7 @@ def tag_list(tag_id):
 
     if auth(AuthActions.is_logged_in):
         posts = db.session.scalars(
-            select(Post)
-            .join(BridgeTag, Post.id == BridgeTag.post_id)
-            .join(Tag, Tag.id == BridgeTag.tag_id)
-            .where(Tag.id == tag_id)
+            select(Post).join(BridgeTag, Post.id == BridgeTag.post_id).join(Tag, Tag.id == BridgeTag.tag_id).where(Tag.id == tag_id)
         )
     else:
         posts = db.session.scalars(

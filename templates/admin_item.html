@@ -9,26 +9,26 @@
         <div class="card-body">
 
             {% if items %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            {% for a in attributes %}
-                                <th class="text-left">{{a.title()}}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
                             <tr>
                                 {% for a in attributes %}
-                                    <td class="text-left">{{ item[a] }}</td>
+                                    <th class="text-left">{{a.title()}}</th>
                                 {% endfor %}
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                                <tr>
+                                    {% for a in attributes %}
+                                        <td class="text-left">{{ item[a] }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
                 Nothing here yet
             {% endif %}

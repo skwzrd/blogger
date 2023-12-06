@@ -3,11 +3,11 @@ from enum import Enum
 from socket import gethostname
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import (Boolean, Column, Date, DateTime, Float, ForeignKey,
-                        Integer, String, Table, UniqueConstraint, func)
-from sqlalchemy.orm import DeclarativeBase, relationship, registry
+from sqlalchemy import Boolean, Column, Date, DateTime, Float, ForeignKey, Integer, String, Table, UniqueConstraint, func
+from sqlalchemy.orm import DeclarativeBase, registry, relationship
 
 mapper_registry = registry()
+
 
 class UserRole(Enum):
     admin = 1
@@ -79,8 +79,12 @@ bridge_tag = Table(
     Column("tag_id", ForeignKey("tag.id"), primary_key=True),
     UniqueConstraint("post_id", "tag_id"),
 )
+
+
 class BridgeTag:
     pass
+
+
 mapper_registry.map_imperatively(BridgeTag, bridge_tag)
 
 

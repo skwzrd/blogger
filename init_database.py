@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash
 
 from configs import CONSTS
-from models import Contact, Post, User, UserRole, Comment, File, Tag, db
+from models import Comment, Contact, File, Post, Tag, User, UserRole, db
 
 
 def build_db():
@@ -25,20 +25,12 @@ def build_db():
         role=UserRole.admin.value,
     )
 
-    comment1 = Comment(title='title1', text='text1')
-    file1 = File(file_path='/123.txt', file_name='123.txt')
-    tag1 = Tag(text='tag1')
-    tag2 = Tag(text='tag2')
+    comment1 = Comment(title="title1", text="text1")
+    file1 = File(file_path="/123.txt", file_name="123.txt")
+    tag1 = Tag(text="tag1")
+    tag2 = Tag(text="tag2")
 
-    post1 = Post(
-        title='title1',
-        text='text1',
-        is_published=True,
-        user=admin1,
-        comments=[comment1],
-        files=[file1],
-        tags=[tag1, tag2]
-    )
+    post1 = Post(title="title1", text="text1", is_published=True, user=admin1, comments=[comment1], files=[file1], tags=[tag1, tag2])
     post1.comments = [comment1]
 
     contact1 = Contact(
@@ -68,7 +60,7 @@ def build_db():
     # delete everything except for admin user
     session.delete(contact1)
     session.delete(post)
-    session.delete(tag1) # cascade deletions do not apply to tags
+    session.delete(tag1)  # cascade deletions do not apply to tags
     session.delete(tag2)
     session.commit()
 

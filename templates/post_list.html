@@ -15,64 +15,64 @@
                 Nothing here yet
             {% else %}
                 <div class="table-responsive">
-                <table class="table table-sm align-middle p-2 table-borderless">
-                    <thead>
-                        <tr>
-                            {% if logged_in %}
-                                <th class="col-1 text-center">Delete</th>
-                                <th class="col-1 text-center">Edit</th>
-                            {% endif %}
+                    <table class="table table-sm align-middle p-2 table-borderless">
+                        <thead>
+                            <tr>
+                                {% if logged_in %}
+                                    <th class="col-1 text-center">Delete</th>
+                                    <th class="col-1 text-center">Edit</th>
+                                {% endif %}
 
-                            <th class="text-center">Title</th>
-                            <th class="text-left">Tags</th>
+                                <th class="text-center">Title</th>
+                                <th class="text-left">Tags</th>
 
-                            <th class="text-center">Date</th>
-                            
-                            {% if logged_in %}
-                                <th class="text-left">Published</th>
-                            {% endif %}
-                        <tr>
-                        </thead>
-                            <tbody>
-                                {% for post in posts %}
-                                    <tr>
-                                        {% if logged_in %}
-                                            <td class="col-1 text-center">
-                                                {% include 'post_delete_button.html' %}
+                                <th class="text-center">Date</th>
+
+                                {% if logged_in %}
+                                    <th class="text-left">Published</th>
+                                {% endif %}
+                                <tr>
+                                </thead>
+                                <tbody>
+                                    {% for post in posts %}
+                                        <tr>
+                                            {% if logged_in %}
+                                                <td class="col-1 text-center">
+                                                    {% include 'post_delete_button.html' %}
+                                                </td>
+                                                <td class="col-1 text-center">
+                                                    {% include 'post_edit_link.html' %}
+                                                </td>
+                                            {% endif %}
+
+                                            <td class="col-5 text-left">
+                                                <a href="{{url_for('bp_post.post_read', post_id=post.id)}}">
+                                                    {{post.title}}
+                                                </a>
                                             </td>
-                                            <td class="col-1 text-center">
-                                                {% include 'post_edit_link.html' %}
+
+                                            <td class="col-3 text-right">
+                                                {% include 'tag_links.html' %}
                                             </td>
-                                        {% endif %}
-                                        
-                                        <td class="col-5 text-left">
-                                            <a href="{{url_for('bp_post.post_read', post_id=post.id)}}">
-                                                {{post.title}}
-                                            </a>
-                                        </td>
 
-                                        <td class="col-3 text-right">
-                                            {% include 'tag_links.html' %}
-                                        </td>
-
-                                        <td class="col-1 text-center">
-                                            <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
-                                        </td>
-
-                                        {% if logged_in %}
                                             <td class="col-1 text-center">
-                                                {% if post.is_published %}
-                                                    {% include 'icon_see.html' %}
-                                                {% else %}
-                                                    {% include 'icon_no_see.html' %}
-                                                {% endif %}
+                                                <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
                                             </td>
-                                        {% endif %}
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+
+                                            {% if logged_in %}
+                                                <td class="col-1 text-center">
+                                                    {% if post.is_published %}
+                                                        {% include 'icon_see.html' %}
+                                                    {% else %}
+                                                        {% include 'icon_no_see.html' %}
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
             {% endif %}
 
         </div>
