@@ -1,15 +1,16 @@
+{% from 'bootstrap5/form.html' import render_form %}
 {% extends 'layout.html' %}
 
 {% block body %}
 
-    <div class="mt-2 card">
+    <div class="mt-2 card scroll_x">
 
         <div class="card-header">
             {% if is_admin %}
                 <div class="d-flex">
                     <div>
-                        <h3 class="container mt-2">{{post.title}}</h3>
-                        <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
+                        <h3 class="mt-2">{{post.title}}</h3>
+                        <small>{{post.published_date.strftime(CONSTS.datetime_format)}}</small>
                     </div>
 
                     <div class="container">
@@ -19,9 +20,10 @@
                         </div>
                     </div>
                 </div>
+                {% include 'post_delete_script.html' %}
             {% else %}
                 <h2>{{post.title}}</h2>
-                <small>{{post.published_date.strftime('%Y-%m-%d')}}</small>
+                <small>{{post.published_date.strftime(CONSTS.datetime_format)}}</small>
             {% endif %}
         </div>
 
@@ -31,7 +33,9 @@
             </div>
         {% endif %}
 
-        {% include 'file_downloads.html' %}
+        <div class="card-body">
+            {% include 'file_downloads.html' %}
+        </div>
 
         <div class="card-footer">
             <div>
@@ -39,6 +43,52 @@
                     Tags: {% include 'tag_links.html' %}
                 {% endif %}
             </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        {% if not is_admin %}
+            <div class="col-md-6 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        Comment
+                    </div>
+                    <div class="card-body">
+                        {{render_form(form, action="/post/{}".format(post.id), method="post", novalidate=True, id="main_form", button_style="btn btn-md btn-primary mt-2")}}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-md-6 mt-4">
+
+            {% if post and post.comments %}
+                <h3>Comments</h3>
+
+                <div class="card scroll_y p-2" style="height: 19em; max-height: 19em;">
+                    {% for comment in post.comments %}
+                        <div class="container rounded border border-1 mb-2">
+                            <div class="d-flex justify-content-between">
+                                <div class="fw-bold">
+                                    {{comment.title}}
+                                </div>
+                                <small>
+                                    {{ comment.published_date.strftime(CONSTS.datetime_format) }}
+                                </small>
+                            </div>
+                            <small>
+                                {{comment.text}}
+                            </small>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-body">
+                        No comments yet...
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 

@@ -3,7 +3,7 @@ from enum import Enum
 from socket import gethostname
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, Column, Date, DateTime, Float, ForeignKey, Integer, String, Table, UniqueConstraint, func
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Table, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, registry, relationship
 
 mapper_registry = registry()
@@ -93,10 +93,11 @@ class File(db.Model):
 
     id = Column(Integer, primary_key=True, index=True)
     server = Column(String, server_default=gethostname())
-    file_path = Column(String, unique=True)
+    relative_path = Column(String)
+    server_file_name = Column(String, unique=True)
     file_name = Column(String)
     file_type = Column(String)
-    upload_date = Column(Date(), server_default=func.current_date())
+    upload_date = Column(DateTime(), default=datetime.utcnow)
 
     post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
     post = relationship("Post", back_populates="files")
@@ -130,8 +131,8 @@ class Post(db.Model):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     text = Column(String)
-    published_date = Column(Date(), server_default=func.current_date())
-    last_modified_date = Column(Date(), server_default=func.current_date())
+    published_date = Column(DateTime(), default=datetime.utcnow)
+    last_modified_date = Column(DateTime(), default=datetime.utcnow)
     is_published = Column(Boolean, default=True)
 
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
@@ -153,7 +154,7 @@ class Comment(db.Model):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     text = Column(String)
-    published_date = Column(DateTime(timezone=True), server_default=func.now())
+    published_date = Column(DateTime(timezone=True), default=datetime.utcnow)
 
     post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
     post = relationship("Post", back_populates="comments")

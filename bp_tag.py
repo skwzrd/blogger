@@ -15,7 +15,7 @@ def tag_list(tag_id):
     tag_text = db.session.scalar(select(Tag.text).where(Tag.id == tag_id))
     print(tag_text)
 
-    if auth(AuthActions.is_logged_in):
+    if auth(AuthActions.is_admin):
         posts = db.session.scalars(
             select(Post).join(BridgeTag, Post.id == BridgeTag.post_id).join(Tag, Tag.id == BridgeTag.tag_id).where(Tag.id == tag_id)
         )
@@ -37,6 +37,5 @@ def tag_list(tag_id):
         CONSTS=CONSTS,
         posts=posts,
         header=header,
-        logged_in=auth(AuthActions.is_logged_in),
         is_admin=auth(AuthActions.is_admin),
     )

@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Flask, flash, g, redirect, render_template, request, send_from_directory, url_for
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
+from sqlalchemy import select
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from bp_admin import bp_admin
@@ -15,7 +16,7 @@ from configs import CONSTS
 from forms import ContactForm, get_fields
 from init_database import build_db
 from limiter import limiter
-from models import Contact, Log, db
+from models import Contact, Log, Post, db
 from utils import make_path
 
 
@@ -53,7 +54,7 @@ def uploaded_files(filename):
 @app.errorhandler(404)
 def not_found(e: Exception):
     return (
-        render_template("error_404.html", CONSTS=CONSTS, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)),
+        render_template("error_404.html", CONSTS=CONSTS, is_admin=auth(AuthActions.is_admin)),
         404,
     )
 
@@ -61,7 +62,7 @@ def not_found(e: Exception):
 @app.errorhandler(500)
 def internal_server_error(e):
     return (
-        render_template("error_500.html", CONSTS=CONSTS, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)),
+        render_template("error_500.html", CONSTS=CONSTS, is_admin=auth(AuthActions.is_admin)),
         500,
     )
 
@@ -111,6 +112,8 @@ def after(response):
 def index():
     form = ContactForm()
 
+    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.id.desc()).limit(10)).all()
+
     if form.validate_on_submit():
         d = get_fields(Contact, ContactForm, form)
         db.session.add(Contact(**d))
@@ -119,9 +122,7 @@ def index():
         flash("Message received, thank you!", "success")
         return redirect(url_for("index"))
 
-    return render_template(
-        "index.html", CONSTS=CONSTS, form=form, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)
-    )
+    return render_template("index.html", CONSTS=CONSTS, posts=posts, form=form, is_admin=auth(AuthActions.is_admin))
 
 
 if __name__ == "__main__" and app.config["TESTING"]:

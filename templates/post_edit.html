@@ -3,7 +3,7 @@
 
 {% block body %}
 
-    <div class="mt-2 card">
+    <div class="mt-2 card scroll_x">
         <div class="card-header">
             <div class="d-flex justify-content-between">
                 <div>
@@ -15,7 +15,30 @@
         <div class="card-body">
             {{render_form(form, action="/post_edit/{}".format(post.id), method="post", novalidate=True, id="main_form", button_style="btn btn-md btn-primary mt-2")}}
         </div>
+
+        <div class="card-body">
+            {% if post and post.files %}
+                <div class="mt-2 mb-2">
+                    Shared files:
+                    <div class="btn-toolbar" role="toolbar">
+                        {% for file in post.files %}
+                            <div class="btn-group me-2" role="group">
+                                {% if is_admin %}
+                                    <a class="btn link" href="/{{file.relative_path + '/' + file.server_file_name}}">
+                                        {{file.file_name}}
+                                    </a>
+                                    <button onclick="delete_post_file(this, {{ post.id }}, {{file.id}})" class="btn"><small>x</small></button>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </div>
+
+    {% include 'post_delete_script.html' %}
+    {% include 'post_delete_file_script.html' %}
 
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='text', file_uploader=url_for('bp_post.upload')) }}

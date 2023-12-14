@@ -17,6 +17,8 @@ class CONSTS(NamedTuple):
     CKEDITOR_FILE_UPLOADER = "upload"
     CKEDITOR_CODE_THEME = "arta"
 
+    datetime_format = "%A, %B %d %Y %H:%M:%S %p"
+
     with open(make_path("secret.txt"), encoding="utf-8") as f:
         SECRET_KEY = f.read().strip()
 
@@ -31,7 +33,7 @@ class CONSTS(NamedTuple):
     if TESTING:
         site_url = f"http://{site_host}:{site_port}"
 
-    site_logo_url = "/static/images/logo.png"
+    site_logo_url = "/static/images/logo2.png"
 
     site_version = "v1.0"
 

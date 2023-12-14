@@ -8,8 +8,8 @@
       {% if not category or category == 'message' %}
         {% set category = 'dark' %}
       {% endif %}
-      <div id="flash" class="mt-2 card">
-        <div class="p-2 rounded overflow-hidden bg-{{category}} text-{{font_color}} hstack">
+      <div id="flash" class="mt-2">
+        <div class="p-2 rounded bg-{{category}} text-{{font_color}}">
           <div>{{ message }}</div>
         </div>
       </div>

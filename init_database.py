@@ -26,7 +26,7 @@ def build_db():
     )
 
     comment1 = Comment(title="title1", text="text1")
-    file1 = File(file_path="/123.txt", file_name="123.txt")
+    file1 = File(server_file_name="123.txt", file_name="123.txt", relative_path="/static/uploads")
     tag1 = Tag(text="tag1")
     tag2 = Tag(text="tag2")
 
@@ -49,7 +49,7 @@ def build_db():
     assert post.id == post1.id
     assert post.user.username == CONSTS.admin_username
     assert post.comments[0].text == comment1.text
-    assert post.files[0].file_path == file1.file_path
+    assert post.files[0].server_file_name == file1.server_file_name
     assert len(post.comments) == 1
     assert len(post.files) == 1
     assert len(post.tags) == 2
@@ -66,6 +66,9 @@ def build_db():
 
     posts = session.scalars(select(Post)).all()
     assert len(posts) == 0
+
+    files = session.scalars(select(File)).all()
+    assert len(files) == 0
 
 
 if __name__ == "__main__":

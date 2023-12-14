@@ -1,12 +1,12 @@
 :root {
-  --font_color: #b8948b;
-  --link_color: #b8948b;
-  --font_color_shaded: #b17a6c;
-  --font_color_highlight: #06b382;
-  --background: #1b1b1b;
+  --font_color: #e0e0e0;
+  --link_color: #d6d6d6;
+  --link_color_hover: #bbbbbb;
+  --font_color_shaded: #b3b3b3;
+  --background: #303030;
   --background-light: #222222;
-  --background-dark: #141414;
-  --border_color: #5f5f5f;
+  --background-dark: #111111;
+  --border_color: #4d4d4d;
 }
 
 .font_color {
@@ -20,35 +20,30 @@
   border-color: var(--border_color) !important;
 }
 
-.font_color_highlight {
-  color: var(--font_color_highlight) !important;
-  border-color: var(--border_color) !important;
-}
-
-
-a {
-  color: var(--font_color);
-  margin: 0 !important;
-}
-
-a:visited {
-  color: var(--font_color);
-}
-
-a:hover {
-  color: var(--font_color);
-}
-
-a.btn>svg {
+button,
+a,
+a:active,
+a:focus,
+a:visited,
+.link {
   color: var(--link_color);
+  text-decoration: none;
 }
 
-a.btn>svg :visited {
-  color: var(--link_color);
+a:hover,
+.link:hover {
+  color: var(--link_color_hover) !important;
 }
 
-a.btn>svg :hover {
-  color: var(--link_color);
+
+.btn-check:checked+.btn,
+.btn.active,
+.btn.show,
+.btn:hover,
+.btn:first-child:active,
+:not(.btn-check)+.btn:active {
+  background-color: var(--background-light);
+  border-color: var(--border_color);
 }
 
 input[type=file],
@@ -65,6 +60,7 @@ input[type=file],
   border-radius: 4px;
   border: 1px solid var(--border_color);
 }
+
 
 html,
 body {
@@ -89,7 +85,23 @@ table,
   border-color: var(--border_color);
 }
 
+.dropdown-item {
+  color: var(--font_color);
+}
+
+.container {
+  border-color: var(--border_color) !important;
+}
+
 .card-header {
   color: var(--font_color);
   background-color: var(--background-dark);
+}
+
+.scroll_y {
+  overflow-y: auto;
+}
+
+.scroll_x {
+  overflow-x: auto;
 }

@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, url_for
 from sqlalchemy import select, update
 from werkzeug.security import generate_password_hash
 
-from bp_auth import AuthActions, auth, login_required
+from bp_auth import AuthActions, admin_required, auth
 from configs import CONSTS
 from forms import UserForm, get_fields
 from models import User, db
@@ -11,8 +11,8 @@ bp_user = Blueprint("bp_user", __name__, template_folder="templates")
 
 
 @bp_user.route("/user", methods=["GET"])
-@login_required
-def user():
+@admin_required
+def user_read():
     user_id = auth(AuthActions.get_user_id)
     user = db.session.scalar(select(User).where(User.id == user_id))
     if user.id:
@@ -22,7 +22,7 @@ def user():
 
 
 @bp_user.route("/user_edit/<int:user_id>", methods=["GET", "POST"])
-@login_required
+@admin_required
 def user_edit(user_id):
     user_id = auth(AuthActions.get_user_id)
     user = db.session.scalar(select(User).where(User.id == user_id))
@@ -47,6 +47,4 @@ def user_edit(user_id):
         flash("User updated.", "success")
         form.data.clear()
 
-    return render_template(
-        "user_edit.html", CONSTS=CONSTS, form=form, user=user, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)
-    )
+    return render_template("user_edit.html", CONSTS=CONSTS, form=form, user=user, is_admin=auth(AuthActions.is_admin))

@@ -1,0 +1,21 @@
+<script>
+    function delete_post_file(clicked_button, post_id, file_id){
+        if(confirm(`Are you sure you want to delete file #${file_id} in post #${post_id}? Note: This page will reload if you accept, discared all unsaved changes.`))
+        {
+            fetch(`/post_delete_file/${post_id}/${file_id}`, {
+                method: 'DELETE',
+            })
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    alert(`Unable to delete file.`);
+                    alert(error);
+                });
+        }
+        else
+        {
+            e.preventDefault();
+        }
+    }
+</script>

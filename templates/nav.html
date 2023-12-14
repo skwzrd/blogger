@@ -6,7 +6,7 @@
 
   <div class="d-flex flex-wrap">
 
-    {% if logged_in %}
+    {% if is_admin %}
       <div class="dropdown">
         <button class="btn m-1" type="button">
           <a class="dropdown-item" href="{{ url_for('index') }}">{{CONSTS.site_name}}</a>
@@ -29,7 +29,8 @@
             Admin
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
-            <li><a class="dropdown-item" href="{{ url_for('bp_admin.admin_contacts') }}">Contacts</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('bp_admin.admin_contacts') }}">Messages</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('bp_admin.admin_comments') }}">Comments</a></li>
             <li><a class="dropdown-item" href="{{ url_for('bp_admin.admin_logs') }}">Logs</a></li>
           </ul>
         </div>
@@ -40,7 +41,7 @@
           Profile
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-          <li><a class="dropdown-item" href="{{ url_for('bp_user.user') }}">View/Edit</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('bp_user.user_read') }}">View/Edit</a></li>
           <li><a class="dropdown-item" href="{{ url_for('bp_auth.logout') }}">Logout</a></li>
         </ul>
       </div>

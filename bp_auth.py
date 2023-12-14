@@ -38,8 +38,9 @@ def auth(action: AuthActions, user_id=None):
             return session.get("user_id", None)
 
         if action == AuthActions.is_admin:
-            user_id = auth(AuthActions.get_user_id)
+            user_id = session.get("user_id", None)
             if user_id:
+                print(f"Q: {user_id}")
                 user_id = db.session.scalar(select(User.id).where(User.id == user_id).where(User.role == UserRole.admin.value))
                 if user_id:
                     return True
@@ -62,7 +63,7 @@ def login_required(fn):
 def logout_required(fn):
     @wraps(fn)
     def decorated_function(*args, **kwargs):
-        if auth(AuthActions.is_logged_in):
+        if auth(AuthActions.is_admin) or auth(AuthActions.is_logged_in):
             flash("Logout required", "danger")
             return redirect(url_for("bp_auth.logout"))
         return fn(*args, **kwargs)
@@ -100,9 +101,7 @@ def login():
 
         flash("Incorrect username or password.", "danger")
 
-    return render_template(
-        "login.html", form=form, CONSTS=CONSTS, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)
-    )
+    return render_template("login.html", form=form, CONSTS=CONSTS, is_admin=auth(AuthActions.is_admin))
 
 
 @bp_auth.route("/logout", methods=["GET"])

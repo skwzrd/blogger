@@ -1,30 +1,38 @@
 import os
-from datetime import datetime
+from time import time
 
 from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
 
-from bp_auth import AuthActions, auth, login_required
+from bp_auth import AuthActions, admin_required, auth
 from configs import CONSTS
-from forms import PostForm, get_fields
-from models import File, Post, Tag, db
+from forms import CommentForm, PostForm, get_fields
+from limiter import limiter
+from models import Comment, File, Post, Tag, db
 
 bp_post = Blueprint("bp_post", __name__, template_folder="templates")
 
 
 def get_tags_from_form(form):
     # tags must be unique -- perform one extra query to meet this criteria
-    form_tags = [x.strip() for x in form.tags.data.split(",") if x and x.strip() != ""]
+    form_tags = {x.strip() for x in form.tags.data.split(",") if x and x.strip() != ""}
     existing_tags = db.session.scalars(select(Tag).where(Tag.text.in_(form_tags))).all()
     existing_tags_text = [t.text for t in existing_tags]
     new_tags = [Tag(text=t) for t in form_tags if t not in existing_tags_text]
     return new_tags + existing_tags
 
 
+def delete_upload(file_name):
+    path = os.path.join(current_app.config["UPLOADS_FULL_PATH"], file_name)
+    if os.path.isfile(path):
+        os.remove(path)
+        return
+
+
 def get_filename_datetime():
-    return datetime.now().strftime("%Y_%m_%d__%H_%M_%S__%f")
+    return time().__str__().split(".")[0]
 
 
 def upload_files_from_form(form):
@@ -40,19 +48,19 @@ def upload_files_from_form(form):
                 file_type = header[1].split("/")[-1]
                 break
 
-        file_name_path = f"{get_filename_datetime()}__{file_name}"
-        rel_path = os.path.join(current_app.config["UPLOADS_REL_PATH"], file_name_path)
-        full_path = os.path.join(current_app.config["UPLOADS_FULL_PATH"], file_name_path)
+        server_file_name = f"{get_filename_datetime()}__{file_name}"
+        relative_path = current_app.config["UPLOADS_REL_PATH"]
+        full_path = os.path.join(current_app.config["UPLOADS_FULL_PATH"], server_file_name)
         file_data = file.read()
         with open(full_path, "wb") as f:
             f.write(file_data)
 
-        files.append(File(file_name=file_name, file_path=rel_path, file_type=file_type))
+        files.append(File(file_name=file_name, relative_path=relative_path, server_file_name=server_file_name, file_type=file_type))
     return files
 
 
 @bp_post.route("/upload", methods=["POST"])
-@login_required
+@admin_required
 def upload():
     f = request.files.get("upload")
 
@@ -67,7 +75,7 @@ def upload():
 
 
 @bp_post.route("/post_create", methods=["GET", "POST"])
-@login_required
+@admin_required
 def post_create():
     form = PostForm()
 
@@ -89,13 +97,11 @@ def post_create():
         form.data.clear()
         return redirect(url_for("bp_post.post_list"))
 
-    return render_template(
-        "post_create.html", CONSTS=CONSTS, form=form, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)
-    )
+    return render_template("post_create.html", CONSTS=CONSTS, form=form, is_admin=auth(AuthActions.is_admin))
 
 
 @bp_post.route("/post_edit/<int:post_id>", methods=["GET", "POST"])
-@login_required
+@admin_required
 def post_edit(post_id):
     form = PostForm()
 
@@ -129,46 +135,85 @@ def post_edit(post_id):
         CONSTS=CONSTS,
         form=form,
         post=post,
-        logged_in=auth(AuthActions.is_logged_in),
         is_admin=auth(AuthActions.is_admin),
     )
 
 
-@bp_post.route("/post/<int:post_id>")
-def post_read(post_id):
-    if auth(AuthActions.is_logged_in):
-        post = db.session.scalar(select(Post).where(Post.id == post_id))
-    else:
-        post = db.session.scalar(select(Post).where(Post.id == post_id).where(Post.is_published == True))
+@bp_post.route("/admin_post_read/<int:post_id>")
+@admin_required
+def admin_post_read(post_id):
+    post = db.session.scalar(select(Post).where(Post.id == post_id))
 
     if post:
-        return render_template(
-            "post.html", CONSTS=CONSTS, post=post, logged_in=auth(AuthActions.is_logged_in), is_admin=auth(AuthActions.is_admin)
-        )
+        return render_template("post.html", CONSTS=CONSTS, post=post, is_admin=auth(AuthActions.is_admin))
+
+    return redirect(url_for("bp_post.post_list"))
+
+
+@bp_post.route("/post/<int:post_id>", methods=["GET", "POST"])
+@limiter.limit("20/day", methods=["POST"])
+def post_read(post_id):
+    form = CommentForm()
+
+    post = db.session.scalar(select(Post).where(Post.id == post_id).where(Post.is_published == True))
+
+    if post:
+        if form.validate_on_submit():
+            d = get_fields(Comment, CommentForm, form)
+            comment = Comment(post_id=post_id, **d)
+            db.session.add(comment)
+            db.session.commit()
+            form.data.clear()
+            flash("Comment added.", "success")
+            return redirect(url_for("bp_post.post_read", post_id=post_id))
+
+        return render_template("post.html", CONSTS=CONSTS, post=post, form=form, is_admin=auth(AuthActions.is_admin))
 
     return redirect(url_for("bp_post.post_list"))
 
 
 @bp_post.route("/post_delete/<int:post_id>", methods=["DELETE"])
-@login_required
+@admin_required
 def post_delete(post_id):
     post = db.session.scalar(select(Post).where(Post.id == post_id))
     if post:
-        db.session.execute(delete(Post).where(Post.id == post_id))
+        for file in post.files:
+            delete_upload(file.server_file_name)
+
+        db.session.delete(post)
         db.session.commit()
 
         post = db.session.scalar(select(Post).where(Post.id == post_id))
         if not post:
-            flash(f"Post deleted.", "success")
+            flash("Post deleted.", "success")
             return redirect(url_for("bp_post.post_list"))
 
     flash(f"Couldn't find post #{post.id} to delete.")
     return redirect(url_for("bp_post.post_list"))
 
 
+@bp_post.route("/post_delete_file/<int:post_id>/<int:file_id>", methods=["DELETE"])
+@admin_required
+def post_delete_file(post_id, file_id):
+    file = db.session.scalar(select(File).where(File.post_id == post_id).where(File.id == file_id))
+    if file:
+        delete_upload(file.server_file_name)
+
+        db.session.execute(delete(File).where(File.post_id == post_id).where(File.id == file_id))
+        db.session.commit()
+
+        file = db.session.scalar(select(File).where(File.id == file_id))
+        if not file:
+            flash("File deleted.", "success")
+            return redirect(url_for("bp_post.post_edit", post_id=post_id))
+
+    flash(f"Couldn't find post #{post_id} and file #{file_id} to delete.")
+    return redirect(url_for("bp_post.post_edit", post_id=post_id))
+
+
 @bp_post.route("/posts")
 def post_list():
-    if auth(AuthActions.is_logged_in):
+    if auth(AuthActions.is_admin):
         posts = db.session.scalars(select(Post)).all()
     else:
         posts = db.session.scalars(select(Post).where(Post.is_published == True)).all()
@@ -179,6 +224,5 @@ def post_list():
         CONSTS=CONSTS,
         posts=posts,
         header=header,
-        logged_in=auth(AuthActions.is_logged_in),
         is_admin=auth(AuthActions.is_admin),
     )
