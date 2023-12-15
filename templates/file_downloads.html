@@ -2,7 +2,7 @@
     <div class="mt-2 mb-2">
         Shared files:
         {% for file in post.files %}
-            <a class="btn link" href="/{{file.relative_path + '/' + file.server_file_name}}">
+            <a class="btn" href="/{{file.relative_path + '/' + file.server_file_name}}">
                 {{file.file_name}}
             </a>
         {% endfor %}

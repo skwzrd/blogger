@@ -24,7 +24,7 @@
                         {% for file in post.files %}
                             <div class="btn-group me-2" role="group">
                                 {% if is_admin %}
-                                    <a class="btn link" href="/{{file.relative_path + '/' + file.server_file_name}}">
+                                    <a class="btn" href="/{{file.relative_path + '/' + file.server_file_name}}">
                                         {{file.file_name}}
                                     </a>
                                     <button onclick="delete_post_file(this, {{ post.id }}, {{file.id}})" class="btn"><small>x</small></button>

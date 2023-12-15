@@ -39,8 +39,7 @@ sudo nano /etc/redis/redis.conf # set line `supervised no` to `supervised system
 sudo systemctl restart redis
 sudo systemctl status redis
 
-
-python3 main.py
+python3 main.py # development run
 ```
 
 
@@ -48,6 +47,8 @@ python3 main.py
 
 - Create a long, random string in a file called `secret.txt`.
     - Note: The following does the job, `tr -dc A-Za-z0-9 </dev/urandom | head -c 64 > secret.txt`
+- Rename `logo_COPY.png` to `logo.png` and configure its variables.
+- Rename `configs_COPY.css` to `configs.css` and configure its variables.
 - Rename `configs_COPY.py` to `configs.py` and configure its variables.
     - Note: Class variables in `CONSTS` that are all-caps are available in Flask `app.configs['NAME']`.
 - Initialize a new database by running `init_database.py`, or drop-in an existing SQLite database.
@@ -68,8 +69,6 @@ These libraries are not including in the production venv, so install them with `
 
 ## Hosting on Ubuntu
 
-`python3 -m pip install gunicorn`
-
 `sudo nano /etc/systemd/system/blogger.service`
 
 ```service
@@ -81,9 +80,9 @@ After=network.target
 User=user1
 Group=www-data
 
-WorkingDirectory=/home/user1/blogger
-Environment="PATH=/home/user1/venv/bin"
-ExecStart=/home/user1/venv/bin/gunicorn -w 2 -b 127.0.0.1:8080 'main:app'
+WorkingDirectory=/path/to/blogger
+Environment="PATH=/path/to/venv/bin"
+ExecStart=/path/to/venv/bin/gunicorn -w 2 -b 127.0.0.1:8080 'main:app'
 
 Type=simple
 Restart=always
@@ -91,4 +90,19 @@ RestartSec=20
 
 [Install]
 WantedBy=multi-user.target
+```
+
+### Permissions
+```
+sudo chmod -R 770 blogger/
+sudo chmod -R 777 blogger/static
+```
+
+### Run
+
+```
+sudo systemctl daemon-reload
+sudo systemctl enable blogger.service
+sudo systemctl start blogger.service
+sudo systemctl status blogger.service
 ```
