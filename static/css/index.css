@@ -1,7 +1,7 @@
 :root {
   --font_color: #e0e0e0;
-  --link_color: #d6d6d6;
-  --link_color_hover: #bbbbbb;
+  --link_color: #ca7900;
+  --link_color_hover: #ad6800;
   --font_color_shaded: #b3b3b3;
   --background: #303030;
   --background-light: #222222;
@@ -87,6 +87,12 @@ table,
 
 .dropdown-item {
   color: var(--font_color);
+}
+
+.dropdown-item:active,
+.dropdown-item:hover {
+  color: var(--font_color_shaded);
+  background-color: var(--background-light);
 }
 
 .container {
