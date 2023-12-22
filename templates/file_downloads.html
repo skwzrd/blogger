@@ -1,8 +1,8 @@
 {% if post and post.files %}
     <div class="mt-2 mb-2">
-        Shared files:
+        <h5>Attached Files:</h5>
         {% for file in post.files %}
-            <a class="btn" href="/{{file.relative_path + '/' + file.server_file_name}}">
+            <a class="btn m-1" href="/{{file.relative_path + '/' + file.server_file_name}}">
                 {{file.file_name}}
             </a>
         {% endfor %}
