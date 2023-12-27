@@ -6,3 +6,4 @@ flask-sqlalchemy
 flask-wtf
 flask_limiter[redis]
 gunicorn
+Pillow>=9.4.0
