@@ -109,8 +109,8 @@ def after(response):
     return response
 
 
-# @limiter.limit("3/day", methods=["POST"])
 @app.route("/", methods=["GET", "POST"])
+@limiter.limit("3/day", methods=["POST"])
 def index():
     form = ContactForm()
     captcha = MathCaptcha(tff_file_path=app.config["MATH_CAPTCHA_FONT"])
