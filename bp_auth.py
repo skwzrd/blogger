@@ -1,10 +1,12 @@
 from enum import Enum
 from functools import wraps
 
-from flask import Blueprint, current_app, flash, redirect, render_template, session, url_for
+from flask import (Blueprint, current_app, flash, redirect, render_template,
+                   session, url_for)
 from sqlalchemy import select
 from werkzeug.security import check_password_hash
 
+from captcha import MathCaptcha
 from configs import CONSTS
 from forms import LoginForm
 from limiter import limiter
@@ -87,20 +89,25 @@ def admin_required(fn):
 @limiter.limit("30/day", methods=["POST"])
 def login():
     form = LoginForm()
+    captcha = MathCaptcha(tff_file_path=current_app.config["MATH_CAPTCHA_FONT"])
+
     if form.validate_on_submit():
-        username = form.username.data
-        password_candidate = form.password.data
+        if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
+            username = form.username.data
+            password_candidate = form.password.data
 
-        user = db.session.scalar(select(User).where(User.username == username))
-        if user:
-            if check_password_hash(user.password, password_candidate):
-                auth(AuthActions.log_in, user_id=user.id)
+            user = db.session.scalar(select(User).where(User.username == username))
+            if user:
+                if check_password_hash(user.password, password_candidate):
+                    auth(AuthActions.log_in, user_id=user.id)
 
-                flash("Login successful.", "success")
-                return redirect(url_for("bp_post.post_list"))
+                    flash("Login successful.", "success")
+                    return redirect(url_for("bp_post.post_list"))
 
-        flash("Incorrect username or password.", "danger")
+            flash("Incorrect username or password.", "danger")
+        flash("Wrong math captcha answer", "danger")
 
+    form.captcha_id.data, form.captcha_b64_img_str = captcha.generate_captcha()
     return render_template("login.html", form=form, CONSTS=CONSTS, is_admin=auth(AuthActions.is_admin))
 
 

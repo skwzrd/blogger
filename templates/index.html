@@ -63,6 +63,9 @@
               {{ form.csrf_token() }}
               {{ render_form_row([form.name, form.email]) }}
               {{ render_form_row([form.message]) }}
+
+              {% include 'math_captcha.html' %}
+
               {{ render_form_row([form.submit], button_style="btn btn-md btn-primary mt-2") }}
             </form>
           </div>

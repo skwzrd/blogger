@@ -1,0 +1,5 @@
+<div style="display: flex;">
+    {{ render_field(form.captcha_id) }}
+    <img style="align-self: center;" src="data:image/jpeg;base64,{{form.captcha_b64_img_str}}"/>
+    {{ render_field(form.captcha_answer, style="margin-bottom: 0.5rem; margin-left: 0.5rem", placeholder='Captcha Solution') }}
+</div>

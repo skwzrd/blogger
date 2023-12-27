@@ -17,6 +17,8 @@ class CONSTS(NamedTuple):
     CKEDITOR_FILE_UPLOADER = "upload"
     CKEDITOR_CODE_THEME = "arta"
 
+    MATH_CAPTCHA_FONT = os.path.join(os.path.dirname(__file__), "fonts/tly.ttf")
+
     if not os.path.exists(UPLOADS_FULL_PATH):
         os.mkdir(UPLOADS_FULL_PATH, mode=770)
 

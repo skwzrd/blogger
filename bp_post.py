@@ -1,12 +1,14 @@
 import os
 from time import time
 
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask import (Blueprint, current_app, flash, redirect, render_template,
+                   request, url_for)
 from flask_ckeditor import upload_fail, upload_success
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
 
 from bp_auth import AuthActions, admin_required, auth
+from captcha import MathCaptcha
 from configs import CONSTS
 from forms import CommentForm, PostForm, get_fields
 from limiter import limiter
@@ -154,19 +156,24 @@ def admin_post_read(post_id):
 @limiter.limit("20/day", methods=["POST"])
 def post_read(post_id):
     form = CommentForm()
+    captcha = MathCaptcha(tff_file_path=current_app.config["MATH_CAPTCHA_FONT"])
 
     post = db.session.scalar(select(Post).where(Post.id == post_id).where(Post.is_published == True))
 
     if post:
         if form.validate_on_submit():
-            d = get_fields(Comment, CommentForm, form)
-            comment = Comment(post_id=post_id, **d)
-            db.session.add(comment)
-            db.session.commit()
-            form.data.clear()
-            flash("Comment added.", "success")
-            return redirect(url_for("bp_post.post_read", post_id=post_id))
+            if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
+                d = get_fields(Comment, CommentForm, form)
+                comment = Comment(post_id=post_id, **d)
+                db.session.add(comment)
+                db.session.commit()
+                form.data.clear()
+                flash("Comment added.", "success")
+                return redirect(url_for("bp_post.post_read", post_id=post_id))
 
+            flash("Wrong math captcha answer", "danger")
+
+        form.captcha_id.data, form.captcha_b64_img_str = captcha.generate_captcha()
         return render_template("post.html", CONSTS=CONSTS, post=post, form=form, is_admin=auth(AuthActions.is_admin))
 
     return redirect(url_for("bp_post.post_list"))

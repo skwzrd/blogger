@@ -5,7 +5,9 @@ from flask_sqlalchemy.model import Model
 from flask_wtf import FlaskForm
 from sqlalchemy import select
 from werkzeug.security import check_password_hash
-from wtforms.fields import BooleanField, DateField, EmailField, MultipleFileField, PasswordField, StringField, SubmitField, TextAreaField
+from wtforms.fields import (BooleanField, DateField, EmailField, HiddenField,
+                            IntegerField, MultipleFileField, PasswordField,
+                            StringField, SubmitField, TextAreaField)
 from wtforms.validators import InputRequired, Length, Optional, ValidationError
 
 from models import User, db
@@ -52,6 +54,10 @@ class UserForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=2, max=128)])
     password = PasswordField(validators=[InputRequired(), Length(min=2, max=128)])
+
+    captcha_id = HiddenField(validators=[InputRequired()])
+    captcha_answer = IntegerField("", validators=[InputRequired()])
+
     submit = SubmitField("Submit")
 
     def validate_password(self, field):
@@ -78,6 +84,10 @@ class PostForm(FlaskForm):
 class CommentForm(FlaskForm):
     title = StringField(validators=OPTIONAL, description="Optional")
     text = TextAreaField(validators=[InputRequired(), Length(min=2, max=512)])
+
+    captcha_id = HiddenField(validators=[InputRequired()])
+    captcha_answer = IntegerField("", validators=[InputRequired()])
+
     submit = SubmitField("Submit")
 
 
@@ -85,4 +95,8 @@ class ContactForm(FlaskForm):
     name = StringField(validators=OPTIONAL, description="Optional")
     email = StringField(validators=OPTIONAL, description="Optional")
     message = TextAreaField(validators=[InputRequired(), Length(8, 2048)])
+
+    captcha_id = HiddenField(validators=[InputRequired()])
+    captcha_answer = IntegerField("", validators=[InputRequired()])
+
     submit = SubmitField("Submit")

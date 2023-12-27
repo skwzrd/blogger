@@ -2,7 +2,7 @@
   {% if messages %}
     {% for category, message in messages %}
       {% set font_color = 'white' %}
-      {% if category in ['warning'] %}
+      {% if category in ['warning', 'danger'] %}
         {% set font_color = 'black' %}
       {% endif %}
       {% if not category or category == 'message' %}

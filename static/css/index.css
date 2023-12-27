@@ -24,6 +24,8 @@ a.btn:hover,
 }
 
 input[type=file],
+input[type=number],
+form > div > img,
 .form-check-input,
 .form-control,
 .form-control:active,
@@ -38,6 +40,21 @@ input[type=file],
   border: 1px solid var(--border_color);
 }
 
+input[type=number]{
+ text-align: center;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 
 html,
 body {

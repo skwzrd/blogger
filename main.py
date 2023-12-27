@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
 
-from flask import Flask, flash, g, redirect, render_template, request, send_from_directory, url_for
+from flask import (Flask, flash, g, redirect, render_template, request,
+                   send_from_directory, url_for)
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from sqlalchemy import select
@@ -12,6 +13,7 @@ from bp_auth import AuthActions, auth, bp_auth
 from bp_post import bp_post
 from bp_tag import bp_tag
 from bp_user import bp_user
+from captcha import MathCaptcha
 from configs import CONSTS
 from forms import ContactForm, get_fields
 from init_database import build_db
@@ -107,21 +109,24 @@ def after(response):
     return response
 
 
+# @limiter.limit("3/day", methods=["POST"])
 @app.route("/", methods=["GET", "POST"])
-@limiter.limit("3/day", methods=["POST"])
 def index():
     form = ContactForm()
+    captcha = MathCaptcha(tff_file_path=app.config["MATH_CAPTCHA_FONT"])
 
     posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.id.desc()).limit(10)).all()
-
     if form.validate_on_submit():
-        d = get_fields(Contact, ContactForm, form)
-        db.session.add(Contact(**d))
-        db.session.commit()
-        form.data.clear()
-        flash("Message received, thank you!", "success")
-        return redirect(url_for("index"))
+        if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
+            d = get_fields(Contact, ContactForm, form)
+            db.session.add(Contact(**d))
+            db.session.commit()
+            form.data.clear()
+            flash("Message received, thank you!", "success")
+            return redirect(url_for("index"))
+        flash("Wrong math captcha answer", "danger")
 
+    form.captcha_id.data, form.captcha_b64_img_str = captcha.generate_captcha()
     return render_template("index.html", CONSTS=CONSTS, posts=posts, form=form, is_admin=auth(AuthActions.is_admin))
 
 
