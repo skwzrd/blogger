@@ -14,8 +14,13 @@ class CONSTS(NamedTuple):
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024 * 1024  # gb
     UPLOADS_REL_PATH = os.path.join("static", "uploads")  # must be somewhere in the app's root directory
     UPLOADS_FULL_PATH = make_path(UPLOADS_REL_PATH)
+
     CKEDITOR_FILE_UPLOADER = "upload"
-    CKEDITOR_CODE_THEME = "arta"
+    CKEDITOR_ENABLE_CODESNIPPET = True
+    CKEDITOR_CODE_THEME = "atelier-dune.dark" # previews at https://ckeditor.com/docs/ckeditor4/latest/examples/codesnippet.html
+    CKEDITOR_PKG_TYPE = 'standard'
+    CKEDITOR_SERVE_LOCAL = True
+    CKEDITOR_HEIGHT = 400
 
     MATH_CAPTCHA_FONT = os.path.join(os.path.dirname(__file__), "fonts/tly.ttf")
 

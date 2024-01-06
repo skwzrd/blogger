@@ -9,3 +9,5 @@ configs.py
 uploads/*
 
 secret.txt
+
+static/ckeditor/*

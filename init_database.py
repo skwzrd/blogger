@@ -1,9 +1,22 @@
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import generate_password_hash
 
 from configs import CONSTS
 from models import Comment, Contact, File, Post, Tag, User, UserRole, db
+
+
+def reset_password_admin(admin_username):
+    engine = create_engine(CONSTS.SQLALCHEMY_DATABASE_URI)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    password_old = session.scalar(select(User).where(User.username==admin_username)).password
+    session.execute(update(User).where(User.username==admin_username).values(password=generate_password_hash(CONSTS.admin_password)))
+    session.commit()
+    session.flush()
+    password_new = session.scalar(select(User).where(User.username==admin_username)).password
+    session.close()
+    assert password_old != password_new
 
 
 def build_db():
@@ -69,7 +82,10 @@ def build_db():
 
     files = session.scalars(select(File)).all()
     assert len(files) == 0
-
+    session.close()
+    
 
 if __name__ == "__main__":
-    build_db()
+    print(__file__)
+    # build_db()
+    # reset_password_admin('admin')

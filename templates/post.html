@@ -29,7 +29,7 @@
 
         {% if post.text %}
             <div class="card-body">
-                {{post.text | safe}}
+                <div id='text'>{{post.text | safe}}</div>
             </div>
         {% endif %}
 

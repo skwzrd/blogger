@@ -42,7 +42,6 @@ def auth(action: AuthActions, user_id=None):
         if action == AuthActions.is_admin:
             user_id = session.get("user_id", None)
             if user_id:
-                print(f"Q: {user_id}")
                 user_id = db.session.scalar(select(User.id).where(User.id == user_id).where(User.role == UserRole.admin.value))
                 if user_id:
                     return True
