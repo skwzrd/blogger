@@ -51,7 +51,7 @@ python3 main.py # development run
 - Rename `configs_COPY.css` to `configs.css` and configure its variables.
 - Rename `configs_COPY.py` to `configs.py` and configure its variables.
     - Note: Class variables in `CONSTS` that are all-caps are available in Flask `app.configs['NAME']`.
-- Unzip `static/ckeditor_standard` to `/static/standard` so you have `/static/standard/plugins`, `/static/standard/ckeditor.js`, etc.
+- Unzip `static/ckeditor_standard.zip` to `/static/standard` so you have `/static/standard/plugins`, `/static/standard/ckeditor.js`, etc.
 - Initialize a new database by running `init_database.py`, or drop-in an existing SQLite database.
     - Note: When `CONSTS.TESTING = True`, on each request, BLOGGER will check if a new database has to be created.
 - Flush redis records `redis-cli flushall`.
