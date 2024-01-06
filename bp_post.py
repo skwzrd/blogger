@@ -3,7 +3,7 @@ from time import time
 
 from flask import (Blueprint, current_app, flash, redirect, render_template,
                    request, url_for)
-from flask_ckeditor import upload_fail, upload_success
+from flask_ckeditor_edit import upload_fail, upload_success
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
 

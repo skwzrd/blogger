@@ -31,9 +31,9 @@ git clone https://github.com/skwzrd/blogger.git
 cd blogger
 python3 -m venv venv
 source venv/bin/activate
-python3 -m pip install -r requirements.txt
+pip install -r requirements.txt
 
-From your Flask-CKEditor install, take the CKeditor's standard bundle, and place it in `/static` like `/static/ckeditor/standard/...`
+Unzip `static/ckeditor_standard` to `/static` like `/static/ckeditor/standard/...`
 
 sudo apt update
 sudo apt install redis-server

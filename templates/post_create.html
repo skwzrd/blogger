@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='ckeditor/standard/ckeditor.js') }}"></script>
+    {{ ckeditor.load() }}
     {{ ckeditor.config(name='text', file_uploader=url_for('bp_post.upload')) }}
     
 {% endblock %}

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask_ckeditor import CKEditorField
+from flask_ckeditor_edit import CKEditorField
 from flask_sqlalchemy.model import Model
 from flask_wtf import FlaskForm
 from sqlalchemy import select

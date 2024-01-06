@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import (Flask, flash, g, redirect, render_template, request,
                    send_from_directory, url_for)
 from flask_bootstrap import Bootstrap5
-from flask_ckeditor import CKEditor
+from flask_ckeditor_edit import CKEditor
 from sqlalchemy import select
 from werkzeug.middleware.proxy_fix import ProxyFix
 

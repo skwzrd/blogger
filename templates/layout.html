@@ -8,7 +8,7 @@
     <link href="{{ url_for('static', filename='css/configs.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
 
-    <!-- <link href="{{ url_for('static', filename='ckeditor/standard/plugins/codesnippet/lib/highlight/styles/atelier-dune.dark.css') }}" rel="stylesheet"> -->
+    {{ ckeditor.load_code_theme() }}
 
     <title>{{CONSTS.site_name}}</title>
   </head>

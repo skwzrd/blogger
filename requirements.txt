@@ -1,5 +1,4 @@
 Flask>=3
-flask-ckeditor
 sqlalchemy>=2
 bootstrap-flask
 flask-sqlalchemy
