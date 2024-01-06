@@ -33,7 +33,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-Unzip `static/ckeditor_standard` to `/static` like `/static/ckeditor/standard/...`
+Unzip `static/ckeditor_standard` to `/static` so you have `/static/standard/plugins`, `/static/standard/ckeditor.js`, etc.
 
 sudo apt update
 sudo apt install redis-server
