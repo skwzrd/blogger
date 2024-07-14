@@ -1,11 +1,20 @@
-from datetime import datetime
 from enum import Enum
 from socket import gethostname
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
-                        String, Table, UniqueConstraint)
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    UniqueConstraint
+)
 from sqlalchemy.orm import DeclarativeBase, registry, relationship
+
 from configs import get_current_datetime
 
 mapper_registry = registry()

@@ -1,15 +1,22 @@
 import os
 from time import time
 
-from flask import (Blueprint, current_app, flash, redirect, render_template,
-                   request, url_for)
-from flask_ckeditor_edit import upload_fail, upload_success
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for
+)
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
 
 from bp_auth import AuthActions, admin_required, auth
 from captcha import MathCaptcha
 from configs import CONSTS
+from flask_ckeditor_edit import upload_fail, upload_success
 from forms import CommentForm, PostForm, get_fields
 from limiter import limiter
 from models import Comment, File, Post, Tag, db

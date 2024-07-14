@@ -1,9 +1,16 @@
 import os
 
-from flask import (Flask, flash, g, redirect, render_template, request,
-                   send_from_directory, url_for)
+from flask import (
+    Flask,
+    flash,
+    g,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for
+)
 from flask_bootstrap import Bootstrap5
-from flask_ckeditor_edit import CKEditor
 from sqlalchemy import select
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -14,6 +21,7 @@ from bp_tag import bp_tag
 from bp_user import bp_user
 from captcha import MathCaptcha
 from configs import CONSTS, get_current_datetime
+from flask_ckeditor_edit import CKEditor
 from forms import ContactForm, get_fields
 from init_database import build_db
 from limiter import limiter

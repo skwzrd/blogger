@@ -1,6 +1,14 @@
 import warnings
 from functools import wraps
-from flask import current_app, Blueprint, url_for, request, jsonify, render_template_string
+
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    render_template_string,
+    request,
+    url_for
+)
 from markupsafe import Markup
 
 try:

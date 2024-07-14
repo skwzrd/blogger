@@ -1,8 +1,15 @@
 from enum import Enum
 from functools import wraps
 
-from flask import (Blueprint, current_app, flash, redirect, render_template,
-                   session, url_for)
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    session,
+    url_for
+)
 from sqlalchemy import select
 from werkzeug.security import check_password_hash
 

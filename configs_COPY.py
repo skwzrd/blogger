@@ -1,6 +1,8 @@
 import os
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import NamedTuple
+
+import pytz
 
 from utils import make_path
 
@@ -27,7 +29,8 @@ class CONSTS(NamedTuple):
     if not os.path.exists(UPLOADS_FULL_PATH):
         os.mkdir(UPLOADS_FULL_PATH, mode=770)
 
-    datetime_format = "%A, %B %d %Y %H:%M:%S %p"
+    datetime_format = "%A, %B %d %Y"
+    datetime_timezone = 'America/Toronto'
 
     with open(make_path("secret.txt"), encoding="utf-8") as f:
         SECRET_KEY = f.read().strip()
@@ -45,7 +48,7 @@ class CONSTS(NamedTuple):
 
     site_logo_url = "/static/images/logo_COPY.png"
 
-    site_version = "v1.0"
+    site_version = "v2.0"
 
     admin_username = "admin"
     admin_password = "password12345"
@@ -56,3 +59,9 @@ class CONSTS(NamedTuple):
     conclusion = """Conclusion"""
     email_html = f"""<a href="mailto:{admin_email}">{admin_email}</a>"""
     contact = f"""Feel free to reach out to us at {email_html}, or by filling out the contact form below."""
+
+def get_current_datetime(timezone_str=CONSTS.datetime_timezone):
+    utc_now = datetime.now()
+    timezone = pytz.timezone(timezone_str)
+    now_tz = utc_now.replace(tzinfo=pytz.utc).astimezone(timezone)
+    return now_tz
