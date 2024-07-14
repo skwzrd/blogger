@@ -10,7 +10,7 @@
                 <div class="d-flex">
                     <div>
                         <h3 class="mt-2">{{post.title}}</h3>
-                        <small>{{post.published_date.strftime(CONSTS.datetime_format)}}</small>
+                        <small>{{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
                     </div>
 
                     <div class="container">
@@ -23,7 +23,7 @@
                 {% include 'post_delete_script.html' %}
             {% else %}
                 <h2>{{post.title}}</h2>
-                <small>{{post.published_date.strftime(CONSTS.datetime_format)}}</small>
+                <small>{{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
             {% endif %}
         </div>
 

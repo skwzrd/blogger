@@ -11,7 +11,7 @@ from wtforms.fields import (BooleanField, DateField, EmailField, HiddenField,
 from wtforms.validators import InputRequired, Length, Optional, ValidationError
 
 from models import User, db
-
+from configs import get_current_datetime
 
 def get_fields(model: Model, form: FlaskForm, submitted_form: FlaskForm):
     """
@@ -76,7 +76,7 @@ class PostForm(FlaskForm):
     text = CKEditorField(validators=OPTIONAL)
     files = MultipleFileField(validators=OPTIONAL, description="These are files for users to download.")
     tags = TextAreaField(description="Comma separated tag list", validators=OPTIONAL)
-    last_modified_date = DateField(validators=OPTIONAL, default=datetime.utcnow())
+    last_modified_date = DateField(validators=OPTIONAL, default=get_current_datetime())
     is_published = BooleanField(validators=OPTIONAL)
     submit = SubmitField("Submit")
 

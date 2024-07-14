@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
                         String, Table, UniqueConstraint)
 from sqlalchemy.orm import DeclarativeBase, registry, relationship
+from configs import get_current_datetime
 
 mapper_registry = registry()
 
@@ -26,8 +27,8 @@ class User(db.Model):
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
-    created_datetime = Column(DateTime(timezone=True), default=datetime.utcnow)
-    last_modified_datetime = Column(DateTime(timezone=True), default=datetime.utcnow)
+    created_datetime = Column(DateTime(timezone=True), default=get_current_datetime)
+    last_modified_datetime = Column(DateTime(timezone=True), default=get_current_datetime)
     first_name = Column(String)
     last_name = Column(String)
     username = Column(String, unique=True, nullable=False, index=True)
@@ -48,7 +49,7 @@ class Contact(db.Model):
     name = Column(String)
     email = Column(String)
     message = Column(String, nullable=False)
-    created_datetime = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
+    created_datetime = Column(DateTime(timezone=True), nullable=False, default=get_current_datetime)
 
 
 class Log(db.Model):
@@ -98,7 +99,7 @@ class File(db.Model):
     server_file_name = Column(String, unique=True)
     file_name = Column(String)
     file_type = Column(String)
-    upload_date = Column(DateTime(), default=datetime.utcnow)
+    upload_date = Column(DateTime(), default=get_current_datetime)
 
     post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
     post = relationship("Post", back_populates="files")
@@ -132,8 +133,8 @@ class Post(db.Model):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     text = Column(String)
-    published_date = Column(DateTime(), default=datetime.utcnow)
-    last_modified_date = Column(DateTime(), default=datetime.utcnow)
+    published_date = Column(DateTime(), default=get_current_datetime)
+    last_modified_date = Column(DateTime(), default=get_current_datetime)
     is_published = Column(Boolean, default=True)
 
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
@@ -155,7 +156,7 @@ class Comment(db.Model):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     text = Column(String)
-    published_date = Column(DateTime(timezone=True), default=datetime.utcnow)
+    published_date = Column(DateTime(timezone=True), default=get_current_datetime)
 
     post_id = Column(Integer, ForeignKey("post.id"), nullable=False)
     post = relationship("Post", back_populates="comments")

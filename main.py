@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 from flask import (Flask, flash, g, redirect, render_template, request,
                    send_from_directory, url_for)
@@ -14,7 +13,7 @@ from bp_post import bp_post
 from bp_tag import bp_tag
 from bp_user import bp_user
 from captcha import MathCaptcha
-from configs import CONSTS
+from configs import CONSTS, get_current_datetime
 from forms import ContactForm, get_fields
 from init_database import build_db
 from limiter import limiter
@@ -71,7 +70,7 @@ def internal_server_error(e):
 
 @app.before_request
 def before():
-    g.start_datetime_utc = datetime.utcnow()
+    g.start_datetime_utc = get_current_datetime('Etc/UTC')
 
     if app.config["TESTING"]:
         database_path = make_path(app.config["DATABASE_FILE"])
@@ -82,7 +81,7 @@ def before():
 
 @app.after_request
 def after(response):
-    g.end_datetime_utc = datetime.utcnow()
+    g.end_datetime_utc = get_current_datetime('Etc/UTC')
 
     log = Log(
         x_forwarded_for=request.headers.get("X-Forwarded-For", None),
@@ -115,7 +114,7 @@ def index():
     form = ContactForm()
     captcha = MathCaptcha(tff_file_path=app.config["MATH_CAPTCHA_FONT"])
 
-    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.id.desc()).limit(10)).all()
+    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.last_modified_date.desc()).limit(10)).all()
     if form.validate_on_submit():
         if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
             d = get_fields(Contact, ContactForm, form)

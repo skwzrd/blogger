@@ -29,7 +29,7 @@
                                 <th class="text-center">Date</th>
 
                                 {% if is_admin %}
-                                    <th class="text-left">Published</th>
+                                    <th class="text-left">Modified</th>
                                 {% endif %}
                                 <tr>
                                 </thead>
@@ -62,7 +62,7 @@
                                             </td>
 
                                             <td class="col-1 text-center">
-                                                <small>{{post.published_date.strftime(CONSTS.datetime_format)}}</small>
+                                                <small>{{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
                                             </td>
 
                                             {% if is_admin %}
