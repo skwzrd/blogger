@@ -228,7 +228,7 @@ def post_delete_file(post_id, file_id):
 @bp_post.route("/posts")
 def post_list():
     if auth(AuthActions.is_admin):
-        posts = db.session.scalars(select(Post).order_by(Post.last_modified_date.desc())).all()
+        posts = db.session.scalars(select(Post).order_by(Post.published_date.desc())).all()
     else:
         posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.id.desc())).all()
 

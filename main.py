@@ -122,7 +122,7 @@ def index():
     form = ContactForm()
     captcha = MathCaptcha(tff_file_path=app.config["MATH_CAPTCHA_FONT"])
 
-    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.last_modified_date.desc()).limit(10)).all()
+    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc()).limit(12)).all()
     if form.validate_on_submit():
         if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
             d = get_fields(Contact, ContactForm, form)

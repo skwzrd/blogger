@@ -10,7 +10,11 @@
                 <div class="d-flex">
                     <div>
                         <h3 class="mt-2">{{post.title}}</h3>
-                        <small>{{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
+                        <small><b>Published:</b> {{post.published_date.strftime(CONSTS.datetime_format)}}</small>
+                        {% if post.published_date != post.last_modified_date %}
+                            <br>
+                            <small><b>Last Modified:</b> {{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
+                        {% endif %}
                     </div>
 
                     <div class="container">
@@ -23,7 +27,11 @@
                 {% include 'post_delete_script.html' %}
             {% else %}
                 <h2>{{post.title}}</h2>
-                <small>{{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
+                <small><b>Published:</b> {{post.published_date.strftime(CONSTS.datetime_format)}}</small>
+                {% if post.published_date != post.last_modified_date %}
+                    <br>
+                    <small><b>Last Modified:</b> {{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
+                {% endif %}
             {% endif %}
         </div>
 

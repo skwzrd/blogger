@@ -26,10 +26,11 @@
                                 <th class="text-left">Title</th>
                                 <th class="text-left">Tags</th>
 
-                                <th class="text-center">Date</th>
+                                <th class="text-center">Published</th>
+                                <th class="text-center">Modified</th>
 
                                 {% if is_admin %}
-                                    <th class="text-left">Modified</th>
+                                    <th class="text-left">Public</th>
                                 {% endif %}
                                 <tr>
                                 </thead>
@@ -62,7 +63,10 @@
                                             </td>
 
                                             <td class="col-1 text-center">
-                                                <small>{{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
+                                                <small>{{post.published_date.strftime(CONSTS.datetime_format_short)}}</small>
+                                            </td>
+                                            <td class="col-1 text-center">
+                                                <small>{{post.last_modified_date.strftime(CONSTS.datetime_format_short)}}</small>
                                             </td>
 
                                             {% if is_admin %}

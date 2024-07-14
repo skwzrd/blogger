@@ -29,7 +29,7 @@ class CONSTS(NamedTuple):
     if not os.path.exists(UPLOADS_FULL_PATH):
         os.mkdir(UPLOADS_FULL_PATH, mode=770)
 
-    datetime_format = "%A, %B %d %Y"
+    datetime_format = "%A, %B %d, %Y"
     datetime_timezone = 'America/Toronto'
 
     with open(make_path("secret.txt"), encoding="utf-8") as f:
