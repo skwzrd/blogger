@@ -60,6 +60,12 @@ class CONSTS(NamedTuple):
     email_html = f"""<a href="mailto:{admin_email}">{admin_email}</a>"""
     contact = f"""Feel free to reach out to us at {email_html}, or by filling out the contact form below."""
 
+    rss_feed = True
+    rss_title = site_name
+    rss_description = site_name
+    rss_link = site_url
+
+
 def get_current_datetime(timezone_str=CONSTS.datetime_timezone):
     utc_now = datetime.now()
     timezone = pytz.timezone(timezone_str)

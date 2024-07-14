@@ -1,9 +1,12 @@
 import os
+from datetime import timezone
 
+from feedgen.feed import FeedGenerator
 from flask import (
     Flask,
     flash,
     g,
+    make_response,
     redirect,
     render_template,
     request,
@@ -135,6 +138,31 @@ def index():
 
     form.captcha_id.data, form.captcha_b64_img_str = captcha.generate_captcha()
     return render_template("index.html", CONSTS=CONSTS, posts=posts, form=form, is_admin=auth(AuthActions.is_admin))
+
+
+@app.route('/rss')
+def rss():
+    fg = FeedGenerator()
+    fg.title(CONSTS.rss_title)
+    fg.description(CONSTS.rss_description)
+    fg.link(href=CONSTS.rss_link)
+
+    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc())).all()
+    for post in posts:
+        post_url = url_for('bp_post.post_read', post_id=post.id)
+        fe = fg.add_entry()
+        fe.title(post.title)
+        fe.link(href=post_url)
+        fe.description(post.title)
+        fe.guid(post_url, permalink=True)
+        fe.author(name=CONSTS.site_name, email=CONSTS.admin_email)
+        fe.pubDate(post.published_date.replace(tzinfo=timezone.utc))
+        fe.updated(post.last_modified_date.replace(tzinfo=timezone.utc))
+
+    response = make_response(fg.rss_str())
+    response.headers.set('Content-Type', 'application/rss+xml')
+
+    return response
 
 
 if __name__ == "__main__" and app.config["TESTING"]:
