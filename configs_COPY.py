@@ -64,6 +64,7 @@ class CONSTS(NamedTuple):
     rss_title = site_name
     rss_description = site_name
     rss_link = site_url
+    rss_author = site_name
 
 
 def get_current_datetime(timezone_str=CONSTS.datetime_timezone):
