@@ -69,6 +69,16 @@ img {
   max-height: 100%;
 }
 
+video {
+  max-height: 500px;
+  max-width: 90vw
+}
+
+.max_img {
+  max-width: 2px;
+  max-height: 2px;
+}
+
 table,
 .table,
 .card,
