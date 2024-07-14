@@ -2,12 +2,14 @@ __pycache__/
 venv/
 
 logo.png
+logo.gif
 configs.css
 configs.py
 
 *.db
-uploads/*
+uploads/
 
 secret.txt
 
-static/standard/*
+static/ckeditor/
+static/standard/

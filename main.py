@@ -132,3 +132,4 @@ def index():
 
 if __name__ == "__main__" and app.config["TESTING"]:
     app.run(host=CONSTS.site_host, port=CONSTS.site_port, debug=app.config["TESTING"])
+
