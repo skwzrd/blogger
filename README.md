@@ -51,12 +51,11 @@ python3 main.py # development run
 - Rename `configs_COPY.css` to `configs.css` and configure its variables.
 - Rename `configs_COPY.py` to `configs.py` and configure its variables.
     - Note: Class variables in `CONSTS` that are all-caps are available in Flask `app.configs['NAME']`.
-- Unzip `static/ckeditor_standard.zip` to `/static/standard` so you have `/static/standard/plugins`, `/static/standard/ckeditor.js`, etc.
+- Unzip `static/ckeditor.zip` to `static/ckeditor`. If you don't want to trust this zip file, then download the same CkEditor4 bundle from [here](https://ckeditor.com/cke4/builder/45339af4798d5f7ded692bb44d1a9cf7).
 - Initialize a new database by running `init_database.py`, or drop-in an existing SQLite database.
     - Note: When `CONSTS.TESTING = True`, on each request, BLOGGER will check if a new database has to be created.
 - Flush redis records `redis-cli flushall`.
 - Customize your site's styling by modifying the global CSS variables in `/static/css/index.css`
-
 
 ### Formatting & Linting
 
