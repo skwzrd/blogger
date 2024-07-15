@@ -230,7 +230,7 @@ def post_list():
     if auth(AuthActions.is_admin):
         posts = db.session.scalars(select(Post).order_by(Post.published_date.desc())).all()
     else:
-        posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.id.desc())).all()
+        posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc())).all()
 
     header = "Showing all posts."
     return render_template(
