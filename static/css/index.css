@@ -108,7 +108,8 @@ table,
 }
 
 .scroll_y {
-  overflow-y: auto;
+  overflow-y: scroll;
+  max-height: 500px;
 }
 
 .scroll_x {

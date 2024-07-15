@@ -12,6 +12,7 @@
       <p>
         {{CONSTS.conclusion | safe}}
       </p>
+      <p>If you want, subscribe to the <a href="/rss"><img src="{{url_for('static', filename='images/rss.png')}}"> RSS Feed</a>.</p>
     </div>
   </div>
 
@@ -24,10 +25,10 @@
         </div>
         <div class="card-body">
           {% if posts %}
+            <div class="container scroll_y border border-1 rounded mb-2">
             {% for post in posts %}
-              <div class="container scroll_y p-2 rounded border border-1 mb-2 p-2">
                 <a href="{{url_for('bp_post.post_read', post_id=post.id)}}">
-                  <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-between p-2 mb-2">
                     <div class="fw-bold">
                       {{post.title}}
                     </div>
@@ -36,8 +37,8 @@
                     </div>
                   </div>
                 </a>
-              </div>
             {% endfor %}
+            </div>
           {% else %}
             <div class="card">
               <div class="card-body">
@@ -46,18 +47,18 @@
             </div>
           {% endif %}
         </div>
-
+  
       </div>
     </div>
 
 
+
     <div class="col-md-6 mt-4">
       <div class="card" id="contact">
-        <div class="card-header">Contact</div>
+        <div class="card-header">Comment</div>
         <div class="card-body">
-          <p>Subscribe to the <a href="/rss"><img src="{{url_for('static', filename='images/rss.png')}}"> RSS Feed</a>.</p>
           <p>
-            {{CONSTS.contact | safe}}
+            Say hey, leave a comment!
           </p>
           <div class="container">
             <form id="main_form" action="{{url_for('index')}}" method="post" novalidate=True>
@@ -71,6 +72,42 @@
             </form>
           </div>
         </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-md-12 mt-4">
+      <div class="card" style="min-height: 23em;">
+        <div class="card-header">
+          Latest Comments
+        </div>
+        <div class="card-body">
+          {% if contacts %}
+          <div class="container scroll_y p-2 rounded border border-1 mb-2 p-2">
+            {% for contact in contacts %}
+                <p>
+                  <div>
+                    >>{{ contact.created_datetime.strftime(CONSTS.datetime_format_short) }}
+                  </div>
+                  <div class="fw-bold">
+                    {{contact.name}} {{contact.email}}
+                  </div>
+                  <div>
+                    {{ contact.message }}
+                  </div>
+                </p>
+            {% endfor %}
+          </div>
+          {% else %}
+            <div class="card">
+              <div class="card-body">
+                No comments yet...
+              </div>
+            </div>
+          {% endif %}
+        </div>
+  
       </div>
     </div>
 

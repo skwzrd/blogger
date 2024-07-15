@@ -122,12 +122,19 @@ def after(response):
 @app.route("/", methods=["GET", "POST"])
 @limiter.limit("3/day", methods=["POST"])
 def index():
-    form = ContactForm()
+    form: ContactForm = ContactForm()
     captcha = MathCaptcha(tff_file_path=app.config["MATH_CAPTCHA_FONT"])
 
-    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc()).limit(12)).all()
+    contacts = db.session.scalars(select(Contact).order_by(Contact.created_datetime.desc())).all()
+    posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc()).limit(20)).all()
     if form.validate_on_submit():
         if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
+
+            if comment_is_spam(form.message.data) or CONSTS.site_name in form.email.data:
+                form.data.clear()
+                flash("I loath SPAM and (green) eggs.", "danger")
+                return redirect(url_for("index"))
+
             d = get_fields(Contact, ContactForm, form)
             db.session.add(Contact(**d))
             db.session.commit()
@@ -137,7 +144,7 @@ def index():
         flash("Wrong math captcha answer", "danger")
 
     form.captcha_id.data, form.captcha_b64_img_str = captcha.generate_captcha()
-    return render_template("index.html", CONSTS=CONSTS, posts=posts, form=form, is_admin=auth(AuthActions.is_admin))
+    return render_template("index.html", CONSTS=CONSTS, posts=posts, form=form, contacts=contacts, is_admin=auth(AuthActions.is_admin))
 
 
 @app.route('/rss')
@@ -163,6 +170,51 @@ def rss():
     response.headers.set('Content-Type', 'application/rss+xml')
 
     return response
+
+
+def comment_is_spam(comment):
+    """Checks against blacklisted IP addresses, and vets comment against spam keywords."""
+    blocked_IP_range = ['91.219.212.', '156.146.51.']
+    for blocked_IP in blocked_IP_range:
+        if request.remote_addr.startswith(blocked_IP):
+            return True
+
+    spam_point_threshold = 5
+    spam = {
+        'get it now': 2,
+        '% off': 3,
+        'free': 1,
+        'shipping': 2,
+        'get yours': 1,
+        'best,': 1,
+        'best': 1,
+        'on sale': 2,
+        'gives you': 1,
+        'take care of': 1,
+        'https://': 1,
+        'http://': 1,
+        'www.': 1,
+        'buy': 1,
+        'discount': 2,
+        ' price': 3,
+        'get yours here': 4,
+        'get yours': 2,
+        ',\n': 1,
+        'special': 1,
+        'act now': 2,
+        'worlds greatest': 3,
+        'worlds best': 3,
+        'magic sand': 10,
+        ' seo ': 2,
+        'any help': 2,
+    }
+
+    points = 0
+    comment = comment.lower().replace('\'', '')
+    for phrase in spam:
+        if phrase in comment:
+            points += spam[phrase]
+    return points >= spam_point_threshold
 
 
 if __name__ == "__main__" and app.config["TESTING"]:
