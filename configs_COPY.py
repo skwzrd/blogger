@@ -19,10 +19,9 @@ class CONSTS(NamedTuple):
 
     CKEDITOR_FILE_UPLOADER = "upload"
     CKEDITOR_ENABLE_CODESNIPPET = True
-    CKEDITOR_CODE_THEME = "atelier-dune.dark" # previews at https://ckeditor.com/docs/ckeditor4/latest/examples/codesnippet.html
-    CKEDITOR_PKG_TYPE = 'standard'
     CKEDITOR_SERVE_LOCAL = True
     CKEDITOR_HEIGHT = 400
+    supported_file_uploads = ["jpg", "gif", "png", "jpeg", "mp4", "webm", "mp3"]
 
     MATH_CAPTCHA_FONT = os.path.join(os.path.dirname(__file__), "fonts/tly.ttf")
 

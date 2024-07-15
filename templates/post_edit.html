@@ -40,7 +40,7 @@
     {% include 'post_delete_script.html' %}
     {% include 'post_delete_file_script.html' %}
 
-    {{ ckeditor.load() }}
+    {{ ckeditor.load(custom_url=url_for('static', filename='ckeditor/ckeditor.js')) }}
     {{ ckeditor.config(name='text', file_uploader=url_for('bp_post.upload')) }}
     
 {% endblock %}

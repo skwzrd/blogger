@@ -17,7 +17,7 @@ from wtforms.fields import (
 from wtforms.validators import InputRequired, Length, Optional, ValidationError
 
 from configs import get_current_datetime
-from flask_ckeditor_edit import CKEditorField
+from flask_ckeditor import CKEditorField
 from models import User, db
 
 

@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 from bp_auth import AuthActions, admin_required, auth
 from captcha import MathCaptcha
 from configs import CONSTS
-from flask_ckeditor_edit import upload_fail, upload_success
+from flask_ckeditor import upload_success, upload_fail
 from forms import CommentForm, PostForm, get_fields
 from limiter import limiter
 from models import Comment, File, Post, Tag, db
@@ -74,7 +74,7 @@ def upload():
     f = request.files.get("upload")
 
     extension = f.filename.split(".")[-1].lower()
-    if extension not in ["jpg", "gif", "png", "jpeg"]:
+    if extension not in CONSTS.supported_file_uploads:
         return upload_fail(message="Image only!")
 
     f.save(os.path.join(current_app.config["UPLOADS_FULL_PATH"], f.filename))
