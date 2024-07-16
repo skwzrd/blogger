@@ -91,7 +91,7 @@
                     >>{{ contact.created_datetime.strftime(CONSTS.datetime_format_short) }}
                   </div>
                   <div class="fw-bold">
-                    {{contact.name}} {{contact.email}}
+                    {% if contact.name %}{{contact.name}}{% endif %} {% if contact.email %}{{contact.email}}{% endif %}
                   </div>
                   <div>
                     {{ contact.message }}
