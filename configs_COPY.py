@@ -17,10 +17,6 @@ class CONSTS(NamedTuple):
     UPLOADS_REL_PATH = os.path.join("static", "uploads")  # must be somewhere in the app's root directory
     UPLOADS_FULL_PATH = make_path(UPLOADS_REL_PATH)
 
-    CKEDITOR_FILE_UPLOADER = "upload"
-    CKEDITOR_ENABLE_CODESNIPPET = True
-    CKEDITOR_SERVE_LOCAL = True
-    CKEDITOR_HEIGHT = 400
     supported_file_uploads = ["jpg", "gif", "png", "jpeg", "mp4", "webm", "mp3"]
 
     MATH_CAPTCHA_FONT = os.path.join(os.path.dirname(__file__), "fonts/tly.ttf")
@@ -29,7 +25,7 @@ class CONSTS(NamedTuple):
         os.mkdir(UPLOADS_FULL_PATH, mode=770)
 
     datetime_format = "%A, %B %d, %Y"
-    datetime_timezone = 'America/Toronto'
+    datetime_timezone = "America/Toronto"
 
     with open(make_path("secret.txt"), encoding="utf-8") as f:
         SECRET_KEY = f.read().strip()

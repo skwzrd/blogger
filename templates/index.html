@@ -26,7 +26,7 @@
         <div class="card-body">
           {% if posts %}
             <div class="container scroll_y border border-1 rounded mb-2">
-            {% for post in posts %}
+              {% for post in posts %}
                 <a href="{{url_for('bp_post.post_read', post_id=post.id)}}">
                   <div class="d-flex justify-content-between p-2 mb-2">
                     <div class="fw-bold">
@@ -37,7 +37,7 @@
                     </div>
                   </div>
                 </a>
-            {% endfor %}
+              {% endfor %}
             </div>
           {% else %}
             <div class="card">
@@ -47,7 +47,7 @@
             </div>
           {% endif %}
         </div>
-  
+
       </div>
     </div>
 
@@ -84,8 +84,8 @@
         </div>
         <div class="card-body">
           {% if contacts %}
-          <div class="container scroll_y p-2 rounded border border-1 mb-2 p-2">
-            {% for contact in contacts %}
+            <div class="container scroll_y p-2 rounded border border-1 mb-2 p-2">
+              {% for contact in contacts %}
                 <p>
                   <div>
                     >>{{ contact.created_datetime.strftime(CONSTS.datetime_format_short) }}
@@ -97,8 +97,8 @@
                     {{ contact.message }}
                   </div>
                 </p>
-            {% endfor %}
-          </div>
+              {% endfor %}
+            </div>
           {% else %}
             <div class="card">
               <div class="card-body">
@@ -107,7 +107,7 @@
             </div>
           {% endif %}
         </div>
-  
+
       </div>
     </div>
 

@@ -1,4 +1,5 @@
 import os
+import subprocess
 from time import time
 
 from flask import (
@@ -16,7 +17,6 @@ from werkzeug.utils import secure_filename
 from bp_auth import AuthActions, admin_required, auth
 from captcha import MathCaptcha
 from configs import CONSTS
-from flask_ckeditor import upload_success, upload_fail
 from forms import CommentForm, PostForm, get_fields
 from limiter import limiter
 from models import Comment, File, Post, Tag, db
@@ -24,9 +24,29 @@ from models import Comment, File, Post, Tag, db
 bp_post = Blueprint("bp_post", __name__, template_folder="templates")
 
 
+def convert_html_to_markdown(html_text):
+    result = subprocess.run(
+        ["pandoc", "--from=html+raw_html", "--to=markdown"],
+        input=html_text.encode("utf-8"),
+        stdout=subprocess.PIPE,
+    )
+    result.check_returncode()
+    return result.stdout.decode("utf-8")
+
+
+def convert_markdown_to_html(markdown_text):
+    result = subprocess.run(
+        ["pandoc", "--from=markdown", "--to=html+raw_html"],
+        input=markdown_text.encode("utf-8"),
+        stdout=subprocess.PIPE,
+    )
+    result.check_returncode()
+    return result.stdout.decode("utf-8")
+
+
 def get_tags_from_form(form):
     # tags must be unique -- perform one extra query to meet this criteria
-    form_tags = {x.strip() for x in form.tags.data.split(",") if x and x.strip() != ""}
+    form_tags = {t.strip() for t in form.tags.data.split(",") if t and t.strip() != ""}
     existing_tags = db.session.scalars(select(Tag).where(Tag.text.in_(form_tags))).all()
     existing_tags_text = [t.text for t in existing_tags]
     new_tags = [Tag(text=t) for t in form_tags if t not in existing_tags_text]
@@ -68,21 +88,6 @@ def upload_files_from_form(form):
     return files
 
 
-@bp_post.route("/upload", methods=["POST"])
-@admin_required
-def upload():
-    f = request.files.get("upload")
-
-    extension = f.filename.split(".")[-1].lower()
-    if extension not in CONSTS.supported_file_uploads:
-        return upload_fail(message="Image only!")
-
-    f.save(os.path.join(current_app.config["UPLOADS_FULL_PATH"], f.filename))
-    url = url_for("uploaded_files", filename=f.filename)
-
-    return upload_success(url, filename=f.filename)
-
-
 @bp_post.route("/post_create", methods=["GET", "POST"])
 @admin_required
 def post_create():
@@ -93,8 +98,8 @@ def post_create():
 
         post = Post(**d)
 
+        post.text_html = convert_markdown_to_html(post.text_markdown)
         post.tags = get_tags_from_form(form)
-
         post.files = upload_files_from_form(form)
 
         post.user_id = auth(AuthActions.get_user_id)
@@ -123,6 +128,7 @@ def post_edit(post_id):
     if form.validate_on_submit():
         d = get_fields(Post, PostForm, form)
 
+        post.text_html = convert_markdown_to_html(form.text_markdown.data)
         post.tags = get_tags_from_form(form)
 
         existing_files = []
@@ -138,7 +144,7 @@ def post_edit(post_id):
         form.data.clear()
         return redirect(url_for("bp_post.post_list"))
 
-    form.tags.data = ", ".join([x.text for x in post.tags])
+    form.tags.data = ", ".join([t.text for t in post.tags])
     return render_template(
         "post_edit.html",
         CONSTS=CONSTS,

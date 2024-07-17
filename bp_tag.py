@@ -16,10 +16,16 @@ def tag_list(tag_id):
     print(tag_text)
 
     if auth(AuthActions.is_admin):
-        posts = db.session.scalars(select(Post).join(BridgeTag, Post.id == BridgeTag.post_id).join(Tag, Tag.id == BridgeTag.tag_id).where(Tag.id == tag_id))
+        posts = db.session.scalars(
+            select(Post).join(BridgeTag, Post.id == BridgeTag.post_id).join(Tag, Tag.id == BridgeTag.tag_id).where(Tag.id == tag_id)
+        )
     else:
         posts = db.session.scalars(
-            select(Post).join(BridgeTag, Post.id == BridgeTag.post_id).join(Tag, Tag.id == BridgeTag.tag_id).where(Tag.id == tag_id).where(Post.is_published == True)
+            select(Post)
+            .join(BridgeTag, Post.id == BridgeTag.post_id)
+            .join(Tag, Tag.id == BridgeTag.tag_id)
+            .where(Tag.id == tag_id)
+            .where(Post.is_published == True)
         )
 
     header = None

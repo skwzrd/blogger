@@ -17,7 +17,6 @@ from wtforms.fields import (
 from wtforms.validators import InputRequired, Length, Optional, ValidationError
 
 from configs import get_current_datetime
-from flask_ckeditor import CKEditorField
 from models import User, db
 
 
@@ -81,7 +80,7 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField(validators=[InputRequired(), Length(min=1, max=512)])
-    text = CKEditorField(validators=OPTIONAL)
+    text_markdown = TextAreaField(validators=OPTIONAL, render_kw={"style": "height: 500px;"})
     files = MultipleFileField(validators=OPTIONAL, description="These are files for users to download.")
     tags = TextAreaField(description="Comma separated tag list", validators=OPTIONAL)
     published_date = DateField(validators=OPTIONAL, default=get_current_datetime())

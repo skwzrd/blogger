@@ -11,8 +11,8 @@ bp_admin = Blueprint("bp_admin", __name__, template_folder="templates")
 @bp_admin.route("/admin_contacts", methods=["GET"])
 @admin_required
 def admin_contacts():
-    items = db.session.scalars(select(Contact).order_by(Contact.id.desc()).limit(30)).all()
-    attributes = ["id", "name", "email", "message"]
+    items = db.session.scalars(select(Contact).order_by(Contact.created_datetime.desc()).limit(30)).all()
+    attributes = ["name", "email", "message"]
     header = "Showing all site messages."
     return render_template(
         "admin_item.html",
@@ -27,8 +27,8 @@ def admin_contacts():
 @bp_admin.route("/admin_comments", methods=["GET"])
 @admin_required
 def admin_comments():
-    items = db.session.scalars(select(Comment).order_by(Comment.id.desc()).limit(30)).all()
-    attributes = ["id", "title", "text", "post_id"]
+    items = db.session.scalars(select(Comment).order_by(Comment.published_date.desc()).limit(30)).all()
+    attributes = ["title", "text", "post_id"]
     header = "Showing all site comments."
     return render_template(
         "admin_item.html",

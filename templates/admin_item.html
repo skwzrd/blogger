@@ -22,7 +22,7 @@
                             {% for item in items %}
                                 <tr>
                                     {% for a in attributes %}
-                                        <td class="text-left">{{ item[a] }}</td>
+                                        <td class="text-left">{% if item[a] %} {{item[a]}} {% endif %}</td>
                                     {% endfor %}
                                 </tr>
                             {% endfor %}

@@ -141,7 +141,8 @@ class Post(db.Model):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
-    text = Column(String)
+    text_html = Column(String)
+    text_markdown = Column(String)
     published_date = Column(DateTime(), default=get_current_datetime)
     last_modified_date = Column(DateTime(), default=get_current_datetime)
     is_published = Column(Boolean, default=True)

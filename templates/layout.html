@@ -8,10 +8,6 @@
     <link href="{{ url_for('static', filename='css/configs.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
 
-    {% if 'post' in request.path %}
-    <link href="{{ url_for('static', filename='ckeditor/plugins/codesnippet/lib/highlight/styles/atelier-dune.dark.css') }}" rel="stylesheet">
-    {% endif %}
-    
     <title>{{CONSTS.site_name}}</title>
   </head>
   <body class="mx-auto" style="margin-bottom: 50px;">
@@ -21,13 +17,8 @@
       {% block body %}{% endblock %}
     </div>
   </body>
-  
+
   <script src="{{ url_for('static', filename='js/bs_5_2_3_min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/bs_5_2_3_min_popper.js') }}"></script>
-  
-  {% if 'post' in request.path %}
-  <script src="{{ url_for('static', filename='ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js') }}"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
-  {% endif %}
 
 </html>

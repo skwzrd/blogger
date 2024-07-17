@@ -24,7 +24,6 @@ from bp_tag import bp_tag
 from bp_user import bp_user
 from captcha import MathCaptcha
 from configs import CONSTS, get_current_datetime
-from flask_ckeditor import CKEditor
 from forms import ContactForm, get_fields
 from init_database import build_db
 from limiter import limiter
@@ -44,7 +43,6 @@ def create_app():
     app.register_blueprint(bp_tag)
 
     Bootstrap5(app)
-    CKEditor(app)
 
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
@@ -81,7 +79,7 @@ def internal_server_error(e):
 
 @app.before_request
 def before():
-    g.start_datetime_utc = get_current_datetime('Etc/UTC')
+    g.start_datetime_utc = get_current_datetime("Etc/UTC")
 
     if app.config["TESTING"]:
         database_path = make_path(app.config["DATABASE_FILE"])
@@ -92,7 +90,10 @@ def before():
 
 @app.after_request
 def after(response):
-    g.end_datetime_utc = get_current_datetime('Etc/UTC')
+    g.end_datetime_utc = get_current_datetime("Etc/UTC")
+
+    if request.path.startswith("/static/"):
+        return response
 
     log = Log(
         x_forwarded_for=request.headers.get("X-Forwarded-For", None),
@@ -108,9 +109,7 @@ def after(response):
         start_datetime_utc=g.start_datetime_utc,
         end_datetime_utc=g.end_datetime_utc,
         user_agent=request.user_agent.__str__(),
-        accept=request.headers.get("Accept", None),
         accept_language=request.headers.get("Accept-Language", None),
-        accept_encoding=request.headers.get("Accept-Encoding", None),
         content_length=request.content_length,
     )
     db.session.add(log)
@@ -147,7 +146,7 @@ def index():
     return render_template("index.html", CONSTS=CONSTS, posts=posts, form=form, contacts=contacts, is_admin=auth(AuthActions.is_admin))
 
 
-@app.route('/rss')
+@app.route("/rss")
 def rss():
     fg = FeedGenerator()
     fg.title(CONSTS.rss_title)
@@ -156,7 +155,7 @@ def rss():
 
     posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc())).all()
     for post in posts:
-        post_url = url_for('bp_post.post_read', post_id=post.id)
+        post_url = url_for("bp_post.post_read", post_id=post.id)
         fe = fg.add_entry()
         fe.title(post.title)
         fe.link(href=post_url)
@@ -167,50 +166,49 @@ def rss():
         fe.updated(post.last_modified_date.replace(tzinfo=timezone.utc))
 
     response = make_response(fg.rss_str())
-    response.headers.set('Content-Type', 'application/rss+xml')
+    response.headers.set("Content-Type", "application/rss+xml")
 
     return response
 
 
 def comment_is_spam(comment):
     """Checks against blacklisted IP addresses, and vets comment against spam keywords."""
-    blocked_IP_range = ['91.219.212.', '156.146.51.']
+    blocked_IP_range = ["91.219.212.", "156.146.51."]
     for blocked_IP in blocked_IP_range:
         if request.remote_addr.startswith(blocked_IP):
             return True
 
     spam_point_threshold = 5
     spam = {
-        'get it now': 2,
-        '% off': 3,
-        'free': 1,
-        'shipping': 2,
-        'get yours': 1,
-        'best,': 1,
-        'best': 1,
-        'on sale': 2,
-        'gives you': 1,
-        'take care of': 1,
-        'https://': 1,
-        'http://': 1,
-        'www.': 1,
-        'buy': 1,
-        'discount': 2,
-        ' price': 3,
-        'get yours here': 4,
-        'get yours': 2,
-        ',\n': 1,
-        'special': 1,
-        'act now': 2,
-        'worlds greatest': 3,
-        'worlds best': 3,
-        'magic sand': 10,
-        ' seo ': 2,
-        'any help': 2,
+        "get it now": 2,
+        "% off": 4,
+        "free": 1,
+        "shipping": 2,
+        "get yours": 1,
+        "best": 1,
+        "on sale": 2,
+        "gives you": 1,
+        "take care of": 1,
+        "https://": 1,
+        "http://": 1,
+        "www.": 1,
+        "buy": 1,
+        "discount": 2,
+        " price": 3,
+        "get yours here": 4,
+        "get yours": 2,
+        ",\n": 1,
+        "special": 1,
+        "act now": 2,
+        "worlds greatest": 3,
+        "worlds best": 3,
+        "magic sand": 10,
+        " seo ": 3,
+        "any help": 1,
     }
 
     points = 0
-    comment = comment.lower().replace('\'', '')
+    comment = comment.lower().replace("'", "")
     for phrase in spam:
         if phrase in comment:
             points += spam[phrase]

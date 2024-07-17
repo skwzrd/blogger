@@ -2,7 +2,7 @@
 
 A simple blog written with Flask. It currently features,
 
-- WYSIWYG post editor
+- Markdown post editor which generates HTML automatically
 - Admin account access for CRUD actions
 - Tags
 - Comments
@@ -13,6 +13,7 @@ A simple blog written with Flask. It currently features,
 - Flash messages
 - Mobile support
 - Easily customizable CSS
+- RSS Feed
 
 
 ## Preview
@@ -51,18 +52,19 @@ python3 main.py # development run
 - Rename `configs_COPY.css` to `configs.css` and configure its variables.
 - Rename `configs_COPY.py` to `configs.py` and configure its variables.
     - Note: Class variables in `CONSTS` that are all-caps are available in Flask `app.configs['NAME']`.
-- Unzip `static/ckeditor.zip` to `static/ckeditor`. If you don't want to trust this zip file, then download the same CkEditor4 bundle from [here](https://ckeditor.com/cke4/builder/45339af4798d5f7ded692bb44d1a9cf7).
+- [Install](https://pandoc.org/installing.html) Pandoc.
 - Initialize a new database by running `init_database.py`, or drop-in an existing SQLite database.
     - Note: When `CONSTS.TESTING = True`, on each request, BLOGGER will check if a new database has to be created.
 - Flush redis records `redis-cli flushall`.
 - Customize your site's styling by modifying the global CSS variables in `/static/css/index.css`
+
 
 ### Formatting & Linting
 
 These libraries are not including in the production venv, so install them with `pip install djhtml isort black pylint`.
 
 - `djhtml ./templates`
-- `isort ./`
+- `isort . -m 3`
 - `black --line-length=140 --target-version=py310 .`
 - `pylint -d C <module_name>`
 
@@ -92,11 +94,13 @@ RestartSec=20
 WantedBy=multi-user.target
 ```
 
+
 ### Permissions
 ```
 sudo chmod -R 770 blogger/
 sudo chmod -R 777 blogger/static
 ```
+
 
 ### Run
 

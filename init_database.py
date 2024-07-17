@@ -10,11 +10,11 @@ def reset_password_admin(admin_username):
     engine = create_engine(CONSTS.SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=engine)
     session = Session()
-    password_old = session.scalar(select(User).where(User.username==admin_username)).password
-    session.execute(update(User).where(User.username==admin_username).values(password=generate_password_hash(CONSTS.admin_password)))
+    password_old = session.scalar(select(User).where(User.username == admin_username)).password
+    session.execute(update(User).where(User.username == admin_username).values(password=generate_password_hash(CONSTS.admin_password)))
     session.commit()
     session.flush()
-    password_new = session.scalar(select(User).where(User.username==admin_username)).password
+    password_new = session.scalar(select(User).where(User.username == admin_username)).password
     session.close()
     assert password_old != password_new
 
@@ -43,7 +43,9 @@ def build_db():
     tag1 = Tag(text="tag1")
     tag2 = Tag(text="tag2")
 
-    post1 = Post(title="title1", text="text1", is_published=True, user=admin1, comments=[comment1], files=[file1], tags=[tag1, tag2])
+    post1 = Post(
+        title="title1", text_markdown="text1", is_published=True, user=admin1, comments=[comment1], files=[file1], tags=[tag1, tag2]
+    )
     post1.comments = [comment1]
 
     contact1 = Contact(
@@ -83,7 +85,7 @@ def build_db():
     files = session.scalars(select(File)).all()
     assert len(files) == 0
     session.close()
-    
+
 
 if __name__ == "__main__":
     print(__file__)

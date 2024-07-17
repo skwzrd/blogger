@@ -35,9 +35,9 @@
             {% endif %}
         </div>
 
-        {% if post.text %}
+        {% if post.text_html %}
             <div class="card-body">
-                <div id='text'>{{post.text | safe}}</div>
+                <div id='text'>{{post.text_html | safe}}</div>
             </div>
         {% endif %}
 
@@ -67,9 +67,9 @@
                             {{ form.csrf_token() }}
                             {{ render_field(form.title) }}
                             {{ render_field(form.text) }}
-                
+
                             {% include 'math_captcha.html' %}
-                
+
                             {{ render_field(form.submit, button_style="btn btn-md btn-primary mt-2") }}
                         </form>
                     </div>
