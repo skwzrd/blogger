@@ -1,9 +1,10 @@
--- add columns
+-- 1. Add columns
 ALTER TABLE post ADD text_html TEXT;
 ALTER TABLE post ADD text_markdown TEXT;
 
+-- 2. Run 001_text_cols.py (with test_run=False)
 
--- Drop column "text"
+-- 3. Drop column "text"
 CREATE TEMPORARY TABLE temp AS
 SELECT
   id,

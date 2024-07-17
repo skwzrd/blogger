@@ -45,4 +45,4 @@ def update_database(db_path, test_run = True):
 
 if __name__ == "__main__":
     db_path = "blogger.db"
-    update_database(db_path)
+    update_database(db_path, test_run=True)
