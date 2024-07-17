@@ -119,3 +119,17 @@ table,
 .panel {
   height: 20em;
 }
+
+.c {
+  font-size: 2rem;
+  display: block;
+}
+
+.p {
+  font-size: 1rem;
+  display: block;
+}
+
+.e {
+  font-size: .8rem;
+}
