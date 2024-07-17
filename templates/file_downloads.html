@@ -1,10 +1,12 @@
 {% if post and post.files %}
+<div class="card-body">
     <div class="mt-2 mb-2">
         <h5>Attached Files:</h5>
         {% for file in post.files %}
-            <a class="btn m-1" href="/{{file.relative_path + '/' + file.server_file_name}}">
-                {{file.file_name}}
-            </a>
+        <a class="btn m-1" href="/{{file.relative_path + '/' + file.server_file_name}}">
+            {{file.file_name}}
+        </a>
         {% endfor %}
     </div>
+</div>
 {% endif %}

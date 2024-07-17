@@ -115,3 +115,7 @@ table,
 .scroll_x {
   overflow-x: auto;
 }
+
+.panel {
+  height: 20em;
+}

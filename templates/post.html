@@ -7,21 +7,19 @@
 
         <div class="card-header">
             {% if is_admin %}
-                <div class="d-flex">
+                <div class="container">
                     <div>
                         <h3 class="mt-2">{{post.title}}</h3>
                         <small><b>Published:</b> {{post.published_date.strftime(CONSTS.datetime_format)}}</small>
+
                         {% if post.published_date != post.last_modified_date %}
                             <br>
                             <small><b>Last Modified:</b> {{post.last_modified_date.strftime(CONSTS.datetime_format)}}</small>
                         {% endif %}
-                    </div>
-
-                    <div class="container">
-                        <div class="d-flex justify-content-end">
-                            {% include 'post_edit_link.html' %}
-                            {% include 'post_delete_button.html' %}
-                        </div>
+                        <br>
+                        <br>
+                        {% include 'post_edit_link.html' %}
+                        {% include 'post_delete_button.html' %}
                     </div>
                 </div>
                 {% include 'post_delete_script.html' %}
@@ -41,9 +39,7 @@
             </div>
         {% endif %}
 
-        <div class="card-body">
-            {% include 'file_downloads.html' %}
-        </div>
+        {% include 'file_downloads.html' %}
 
         <div class="card-footer">
             <div>
@@ -81,7 +77,7 @@
             {% if post and post.comments %}
                 <h3>Comments</h3>
 
-                <div class="card scroll_y p-2" style="height: 19em; max-height: 19em;">
+                <div class="card scroll_y p-2" style="height: 20em; max-height: 20em;">
                     {% for comment in post.comments %}
                         <div class="container rounded border border-1 mb-2">
                             <div class="d-flex justify-content-between">
