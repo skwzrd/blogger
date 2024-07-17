@@ -26,7 +26,7 @@ bp_post = Blueprint("bp_post", __name__, template_folder="templates")
 
 def convert_html_to_markdown(html_text):
     result = subprocess.run(
-        ["pandoc", "--from=html+raw_html", "--to=markdown"],
+        ["/usr/bin/pandoc", "--from=html+raw_html", "--to=markdown"],
         input=html_text.encode("utf-8"),
         stdout=subprocess.PIPE,
     )
@@ -36,7 +36,7 @@ def convert_html_to_markdown(html_text):
 
 def convert_markdown_to_html(markdown_text):
     result = subprocess.run(
-        ["pandoc", "--from=markdown", "--to=html+raw_html"],
+        ["/usr/bin/pandoc", "--from=markdown", "--to=html+raw_html"],
         input=markdown_text.encode("utf-8"),
         stdout=subprocess.PIPE,
     )
