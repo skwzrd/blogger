@@ -5,6 +5,9 @@ logo.png
 logo.gif
 configs.css
 configs.py
+templates_custom/
+bp_custom.py
+scripts/
 
 *.db
 uploads/

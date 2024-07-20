@@ -55,6 +55,11 @@ class CONSTS(NamedTuple):
     email_html = f"""<a href="mailto:{admin_email}">{admin_email}</a>"""
     contact = f"""Feel free to reach out to us at {email_html}, or by filling out the contact form below."""
 
+    # These get displayed in the nav. Items should be like {name: endpoint_path}
+    navlinks = {
+        'Music': 'music',
+    }
+
     rss_feed = True
     rss_title = site_name
     rss_description = site_name

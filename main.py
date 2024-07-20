@@ -42,6 +42,13 @@ def create_app():
     app.register_blueprint(bp_post)
     app.register_blueprint(bp_tag)
 
+    try:
+        # for custom endpoints
+        from bp_custom import bp_custom
+        app.register_blueprint(bp_custom)
+    except:
+        pass
+
     Bootstrap5(app)
 
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)

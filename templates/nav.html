@@ -19,18 +19,16 @@
         </ul>
       </div>
 
-      {% if is_admin %}
-        <div class="m-2">
-          <div>
-            Admin
-          </div>
-          <ul>
-            <li><a href="{{ url_for('bp_admin.admin_contacts') }}">Messages</a></li>
-            <li><a href="{{ url_for('bp_admin.admin_comments') }}">Comments</a></li>
-            <li><a href="{{ url_for('bp_admin.admin_logs') }}">Logs</a></li>
-          </ul>
+      <div class="m-2">
+        <div>
+          Admin
         </div>
-      {% endif %}
+        <ul>
+          <li><a href="{{ url_for('bp_admin.admin_contacts') }}">Messages</a></li>
+          <li><a href="{{ url_for('bp_admin.admin_comments') }}">Comments</a></li>
+          <li><a href="{{ url_for('bp_admin.admin_logs') }}">Logs</a></li>
+        </ul>
+      </div>
 
       <div class="m-2">
         <div>
@@ -45,6 +43,8 @@
     {% else %}
       <a class="btn m-1" href="{{ url_for('index') }}">{{CONSTS.site_name}}</a>
       <a class="btn m-1" href="{{ url_for('bp_post.post_list') }}">Posts</a>
-
+      {% for name, path in CONSTS.navlinks.items() %}
+        <a class="btn m-1" href="/{{path}}">{{name}}</a>
+      {% endfor %}
     {% endif %}
 </nav>
