@@ -58,7 +58,7 @@
         <div class="card-header">Comment</div>
         <div class="card-body">
           <p>
-            Say hey, leave a comment!
+            {{CONSTS.contact | safe}}
           </p>
           <div class="container panel scroll_y">
             <form id="main_form" action="{{url_for('index')}}" method="post" novalidate=True>
