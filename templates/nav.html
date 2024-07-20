@@ -44,7 +44,7 @@
       <a class="btn m-1" href="{{ url_for('index') }}">{{CONSTS.site_name}}</a>
       <a class="btn m-1" href="{{ url_for('bp_post.post_list') }}">Posts</a>
       {% for name, path in CONSTS.navlinks.items() %}
-        <a class="btn m-1" href="/{{path}}">{{name}}</a>
+        <a class="btn m-1 {{path}}" href="/{{path}}">{{name}}</a>
       {% endfor %}
     {% endif %}
 </nav>
