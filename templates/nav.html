@@ -9,20 +9,17 @@
 <nav class="rounded">
 
     {% if is_admin %}
+    <div class="d-flex">
       <div class="m-2">
-        <div>
-          Post
-        </div>
-        <ul >
+        Post
+        <ul>
           <li><a href="{{ url_for('bp_post.post_list') }}">Posts</a></li>
           <li><a href="{{ url_for('bp_post.post_create') }}">New Post</a></li>
         </ul>
       </div>
 
       <div class="m-2">
-        <div>
-          Admin
-        </div>
+        Admin
         <ul>
           <li><a href="{{ url_for('bp_admin.admin_contacts') }}">Messages</a></li>
           <li><a href="{{ url_for('bp_admin.admin_comments') }}">Comments</a></li>
@@ -31,20 +28,19 @@
       </div>
 
       <div class="m-2">
-        <div>
-          Profile
-        </div>
+        Profile
         <ul>
           <li><a href="{{ url_for('bp_user.user_read') }}">View/Edit</a></li>
           <li><a href="{{ url_for('bp_auth.logout') }}">Logout</a></li>
         </ul>
       </div>
-
-    {% else %}
-      <a class="btn m-1" href="{{ url_for('index') }}">{{CONSTS.site_name}}</a>
-      <a class="btn m-1" href="{{ url_for('bp_post.post_list') }}">Posts</a>
-      {% for name, path in CONSTS.navlinks.items() %}
-        <a class="btn m-1 {{path}}" href="/{{path}}">{{name}}</a>
-      {% endfor %}
+    </div>
     {% endif %}
+
+    <a class="btn m-1" href="{{ url_for('index') }}">{{CONSTS.site_name}}</a>
+    <a class="btn m-1" href="{{ url_for('bp_post.post_list') }}">Posts</a>
+    {% for name, path in CONSTS.navlinks.items() %}
+      <a class="btn m-1 {{path}}" href="/{{path}}">{{name}}</a>
+    {% endfor %}
+
 </nav>
