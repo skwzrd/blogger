@@ -196,9 +196,9 @@ def comment_is_spam(comment):
         "on sale": 2,
         "gives you": 1,
         "take care of": 1,
-        "https://": 1,
-        "http://": 1,
-        "www.": 1,
+        "https://": 15,
+        "http://": 15,
+        "www.": 15,
         "buy": 1,
         "discount": 2,
         " price": 3,
@@ -212,6 +212,14 @@ def comment_is_spam(comment):
         "magic sand": 10,
         " seo ": 3,
         "any help": 1,
+        "best regards": 3,
+        "outlook.": 15,
+        f"@{CONSTS.site_name}.": 15,
+        "hotmail.": 15,
+        "protonmail.": 15,
+        "yahoo.": 15,
+        "gmail.": 15,
+        "need help with": 15,
     }
 
     points = 0
