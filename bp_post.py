@@ -13,7 +13,6 @@ from flask import (
 from utils import quote_path
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
-
 from bp_auth import AuthActions, admin_required, auth
 from captcha import MathCaptcha
 from configs import CONSTS
@@ -87,14 +86,14 @@ def upload_files_from_form(form):
     return files
 
 
-def get_post_path(db, post):
-    base_path = quote_path(post.title)
-    path = base_path
-    counter = 2
-    while db.session.query(Post).filter(Post.path == path).first():
-        path = f'{base_path}_{counter}'
-        counter += 1
-    return path
+def is_valid_title(db, old_title, new_title) -> int:
+    new_count = db.session.query(Post).filter(Post.title == new_title).count()
+    old_count = db.session.query(Post).filter(Post.title == old_title).count()
+    if old_title != new_title and new_count == 0:
+        return True
+    if old_title == new_title and old_count == 1:
+        return True
+    return False
 
 
 @bp_post.route("/post_create", methods=["GET", "POST"])
@@ -111,14 +110,18 @@ def post_create():
         post.tags = get_tags_from_form(form)
         post.files = upload_files_from_form(form)
         post.user_id = auth(AuthActions.get_user_id)
-        post.path = get_post_path(db, post)
 
-        db.session.add(post)
-        flash("Post created.", "success")
-        db.session.commit()
+        if is_valid_title(db, post.title, d['title']):
+            post.path = quote_path(d['title'])
 
-        form.data.clear()
-        return redirect(url_for("bp_post.post_list"))
+            db.session.add(post)
+            flash("Post created.", "success")
+            db.session.commit()
+
+            form.data.clear()
+            return redirect(url_for("bp_post.post_list"))
+        
+        flash('A post with that title already exists.', 'danger')
 
     return render_template("post_create.html", CONSTS=CONSTS, form=form, is_admin=auth(AuthActions.is_admin))
 
@@ -137,20 +140,23 @@ def post_edit(post_id):
 
         post.text_html = convert_markdown_to_html(form.text_markdown.data)
         post.tags = get_tags_from_form(form)
-        post.path = get_post_path(db, post)
 
-        existing_files = []
-        if post.files:
-            existing_files = post.files
-        post.files = upload_files_from_form(form) + existing_files
+        if is_valid_title(db, post.title, d['title']):
+            post.path = quote_path(d['title'])
+            existing_files = []
+            if post.files:
+                existing_files = post.files
+            post.files = upload_files_from_form(form) + existing_files
 
-        db.session.execute(update(Post).where(Post.id == post.id).values(**d))
+            db.session.execute(update(Post).where(Post.id == post.id).values(**d))
 
-        flash("Post updated.", "success")
-        db.session.commit()
+            flash("Post updated.", "success")
+            db.session.commit()
 
-        form.data.clear()
-        return redirect(url_for("bp_post.post_list"))
+            form.data.clear()
+            return redirect(url_for("bp_post.post_list"))
+        
+        flash('A post with that title already exists.', 'danger')
 
     form.tags.data = ", ".join([t.text for t in post.tags])
     return render_template(
