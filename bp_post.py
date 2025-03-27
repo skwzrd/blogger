@@ -86,13 +86,22 @@ def upload_files_from_form(form):
     return files
 
 
-def is_valid_title(db, old_title, new_title) -> int:
-    new_count = db.session.query(Post).filter(Post.title == new_title).count()
-    old_count = db.session.query(Post).filter(Post.title == old_title).count()
-    if old_title != new_title and new_count == 0:
+def is_valid_title(db, new_title, is_create=False, exiting_post_id=None) -> bool:
+    title_count = db.session.query(Post).filter(Post.title == new_title).count()
+
+    if is_create:
+        if title_count == 0:
+            return True
+        else:
+            return False
+
+    if not is_create:
+        post_ids = db.session.scalars(select(Post.id).filter(Post.title == new_title))
+        for post_id in post_ids:
+            if post_id != exiting_post_id:
+                return False
         return True
-    if old_title == new_title and old_count == 1:
-        return True
+
     return False
 
 
@@ -111,7 +120,7 @@ def post_create():
         post.files = upload_files_from_form(form)
         post.user_id = auth(AuthActions.get_user_id)
 
-        if is_valid_title(db, post.title, d['title']):
+        if is_valid_title(db, post.title, is_create=True):
             post.path = quote_path(d['title'])
 
             db.session.add(post)
@@ -141,7 +150,7 @@ def post_edit(post_id):
         post.text_html = convert_markdown_to_html(form.text_markdown.data)
         post.tags = get_tags_from_form(form)
 
-        if is_valid_title(db, post.title, d['title']):
+        if is_valid_title(db, d['title'], is_create=False, exiting_post_id=post.id):
             post.path = quote_path(d['title'])
             existing_files = []
             if post.files:
