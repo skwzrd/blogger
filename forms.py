@@ -89,13 +89,17 @@ class PostForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
-class CommentForm(FlaskForm):
+class AdminCommentForm(FlaskForm):
     title = StringField(validators=OPTIONAL, description="Optional")
     text = TextAreaField(validators=[InputRequired(), Length(min=2, max=512)])
+    submit = SubmitField("Submit")
 
+
+class CommentForm(AdminCommentForm):
+    title = StringField(validators=OPTIONAL, description="Optional")
+    text = TextAreaField(validators=[InputRequired(), Length(min=2, max=512)])
     captcha_id = HiddenField(validators=[InputRequired()])
     captcha_answer = IntegerField("", validators=[InputRequired()])
-
     submit = SubmitField("Submit")
 
 

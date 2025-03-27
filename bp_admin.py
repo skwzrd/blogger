@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, url_for
 from sqlalchemy import select
 
 from bp_auth import AuthActions, admin_required, auth
@@ -18,6 +18,7 @@ def admin_contacts():
         "admin_item.html",
         CONSTS=CONSTS,
         items=items,
+        safe_cols=[],
         attributes=attributes,
         header=header,
         is_admin=auth(AuthActions.is_admin),
@@ -28,12 +29,16 @@ def admin_contacts():
 @admin_required
 def admin_comments():
     items = db.session.scalars(select(Comment).order_by(Comment.published_date.desc()).limit(30)).all()
-    attributes = ["title", "text", "post_id"]
+    attributes = ["title", "text", "link"]
+    for i, item in enumerate(items):
+        u = url_for('bp_post.admin_post_read', post_id=item.post_id)
+        items[i].link = f"""<a href="{u}">{u}</a>"""
     header = "Showing all site comments."
     return render_template(
         "admin_item.html",
         CONSTS=CONSTS,
         items=items,
+        safe_cols=['link'],
         attributes=attributes,
         header=header,
         is_admin=auth(AuthActions.is_admin),
@@ -50,6 +55,7 @@ def admin_logs():
         "admin_item.html",
         CONSTS=CONSTS,
         items=items,
+        safe_cols=[],
         attributes=attributes,
         header=header,
         is_admin=auth(AuthActions.is_admin),

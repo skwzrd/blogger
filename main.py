@@ -138,7 +138,7 @@ def index():
 
             if comment_is_spam(form.message.data) or CONSTS.site_name in form.email.data:
                 form.data.clear()
-                flash("I loath SPAM and (green) eggs.", "danger")
+                flash("I loath green eggs and spam.", "danger")
                 return redirect(url_for("index"))
 
             d = get_fields(Contact, ContactForm, form)
@@ -162,7 +162,7 @@ def rss():
 
     posts = db.session.scalars(select(Post).where(Post.is_published == True).order_by(Post.published_date.desc())).all()
     for post in posts:
-        post_url = url_for("bp_post.post_read", post_id=post.id)
+        post_url = url_for("bp_post.post_read_path", post_path=post.path, _external=True)
         fe = fg.add_entry()
         fe.title(post.title)
         fe.link(href=post_url)
@@ -173,7 +173,7 @@ def rss():
         fe.updated(post.last_modified_date.replace(tzinfo=timezone.utc))
 
     response = make_response(fg.rss_str())
-    response.headers.set("Content-Type", "application/rss+xml")
+    response.headers.set("Content-Type", "text/xml")
 
     return response
 

@@ -27,7 +27,7 @@
           {% if posts %}
             <div class="container panel scroll_y mt-3 mb-4">
               {% for post in posts %}
-                <a href="{{url_for('bp_post.post_read', post_id=post.id)}}">
+                <a href="{{url_for('bp_post.post_read_path', post_path=post.path)}}">
                   <div class="d-flex justify-content-between">
                     <div class="fw-bold">
                       {{post.title}}

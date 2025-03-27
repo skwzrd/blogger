@@ -48,11 +48,11 @@
 
                                             <td class="col-5 text-left">
                                                 {% if is_admin %}
-                                                    <a href="{{url_for('bp_post.admin_post_read', post_id=post.id)}}">
+                                                    <a href="{{url_for('bp_post.admin_post_read_path', post_path=post.path)}}">
                                                         {{post.title}}
                                                     </a>
                                                 {% else %}
-                                                    <a href="{{url_for('bp_post.post_read', post_id=post.id)}}">
+                                                    <a href="{{url_for('bp_post.post_read_path', post_path=post.path)}}">
                                                         {{post.title}}
                                                     </a>
                                                 {% endif %}

@@ -50,28 +50,27 @@
         </div>
     </div>
 
-
     <div class="row">
-        {% if not is_admin %}
-            <div class="col-md-6 mt-4">
-                <div class="card">
-                    <div class="card-header">
-                        Comment
-                    </div>
-                    <div class="card-body">
-                        <form id="main_form" action="{{url_for('bp_post.post_read', post_id=post.id)}}" method="post" novalidate=True>
-                            {{ form.csrf_token() }}
-                            {{ render_field(form.title) }}
-                            {{ render_field(form.text) }}
-
-                            {% include 'math_captcha.html' %}
-
-                            {{ render_field(form.submit, button_style="btn btn-md btn-primary mt-2") }}
-                        </form>
-                    </div>
+        <div class="col-md-6 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    Comment
+                </div>
+                <div class="card-body">
+                    {% if is_admin %}
+                    <form id="main_form" action="{{url_for('bp_post.admin_post_read_path', post_path=post.path)}}" method="post" novalidate=True>
+                    {% else %}
+                    <form id="main_form" action="{{url_for('bp_post.post_read_path', post_path=post.path)}}" method="post" novalidate=True>
+                    {% endif %}
+                        {{ form.csrf_token() }}
+                        {{ render_field(form.title) }}
+                        {{ render_field(form.text) }}
+                        {% include 'math_captcha.html' %}
+                        {{ render_field(form.submit, button_style="btn btn-md btn-primary mt-2") }}
+                    </form>
                 </div>
             </div>
-        {% endif %}
+        </div>
         <div class="col-md-6 mt-4">
 
             {% if post and post.comments %}

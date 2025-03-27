@@ -8,17 +8,16 @@ from flask import (
     flash,
     redirect,
     render_template,
-    request,
     url_for
 )
+from utils import quote_path
 from sqlalchemy import delete, select, update
 from werkzeug.utils import secure_filename
 
 from bp_auth import AuthActions, admin_required, auth
 from captcha import MathCaptcha
 from configs import CONSTS
-from forms import CommentForm, PostForm, get_fields
-from limiter import limiter
+from forms import CommentForm, PostForm, get_fields, AdminCommentForm
 from models import Comment, File, Post, Tag, db
 
 bp_post = Blueprint("bp_post", __name__, template_folder="templates")
@@ -88,6 +87,16 @@ def upload_files_from_form(form):
     return files
 
 
+def get_post_path(db, post):
+    base_path = quote_path(post.title)
+    path = base_path
+    counter = 2
+    while db.session.query(Post).filter(Post.path == path).first():
+        path = f'{base_path}_{counter}'
+        counter += 1
+    return path
+
+
 @bp_post.route("/post_create", methods=["GET", "POST"])
 @admin_required
 def post_create():
@@ -101,8 +110,8 @@ def post_create():
         post.text_html = convert_markdown_to_html(post.text_markdown)
         post.tags = get_tags_from_form(form)
         post.files = upload_files_from_form(form)
-
         post.user_id = auth(AuthActions.get_user_id)
+        post.path = get_post_path(db, post)
 
         db.session.add(post)
         flash("Post created.", "success")
@@ -117,8 +126,6 @@ def post_create():
 @bp_post.route("/post_edit/<int:post_id>", methods=["GET", "POST"])
 @admin_required
 def post_edit(post_id):
-    form = PostForm()
-
     post = db.session.scalar(select(Post).where(Post.id == post_id))
     if not post:
         return redirect(url_for("bp_post.post_list"))
@@ -130,6 +137,7 @@ def post_edit(post_id):
 
         post.text_html = convert_markdown_to_html(form.text_markdown.data)
         post.tags = get_tags_from_form(form)
+        post.path = get_post_path(db, post)
 
         existing_files = []
         if post.files:
@@ -158,37 +166,70 @@ def post_edit(post_id):
 @admin_required
 def admin_post_read(post_id):
     post = db.session.scalar(select(Post).where(Post.id == post_id))
+    return handle_admin_post_read(post)
 
+
+@bp_post.route("/admin_post_read/<string:post_path>", methods=["GET", "POST"])
+@admin_required
+def admin_post_read_path(post_path):
+    post = db.session.scalar(select(Post).where(Post.path == post_path))
+    return handle_admin_post_read(post)
+
+
+def handle_admin_post_read(post: Post):
+    form = AdminCommentForm()
     if post:
-        return render_template("post.html", CONSTS=CONSTS, post=post, is_admin=auth(AuthActions.is_admin))
+        if form.validate_on_submit():
+            d = get_fields(Comment, AdminCommentForm, form)
+            comment = Comment(post_id=post.id, **d)
+            db.session.add(comment)
+            db.session.commit()
+            form.data.clear()
+            flash("Comment added.", "success")
+            return redirect(url_for("bp_post.admin_post_read_path", post_path=post.path))
 
+        return render_template("post.html", CONSTS=CONSTS, post=post, form=form, is_admin=auth(AuthActions.is_admin))
+
+    flash('Post not found')
     return redirect(url_for("bp_post.post_list"))
 
 
 @bp_post.route("/post/<int:post_id>", methods=["GET", "POST"])
-@limiter.limit("20/day", methods=["POST"])
 def post_read(post_id):
+    post = db.session.scalar(select(Post).where(Post.id == post_id).where(Post.is_published == True))
+    if post and post.path:
+        return redirect(url_for('bp_post.post_read_path', post_path=post.path))
+
+    flash('Post not found')
+    return handle_post_read(post)
+
+
+@bp_post.route("/post/<string:post_path>", methods=["GET", "POST"])
+def post_read_path(post_path):
+    post = db.session.scalar(select(Post).where(Post.path == post_path).where(Post.is_published == True))
+    return handle_post_read(post)
+
+
+def handle_post_read(post: Post):
     form = CommentForm()
     captcha = MathCaptcha(tff_file_path=current_app.config["MATH_CAPTCHA_FONT"])
-
-    post = db.session.scalar(select(Post).where(Post.id == post_id).where(Post.is_published == True))
-
     if post:
         if form.validate_on_submit():
             if captcha.is_valid(form.captcha_id.data, form.captcha_answer.data):
                 d = get_fields(Comment, CommentForm, form)
-                comment = Comment(post_id=post_id, **d)
+                comment = Comment(post_id=post.id, **d)
                 db.session.add(comment)
                 db.session.commit()
                 form.data.clear()
                 flash("Comment added.", "success")
-                return redirect(url_for("bp_post.post_read", post_id=post_id))
+                return redirect(url_for("bp_post.post_read_path", post_path=post.path))
 
             flash("Wrong math captcha answer", "danger")
 
         form.captcha_id.data, form.captcha_b64_img_str = captcha.generate_captcha()
         return render_template("post.html", CONSTS=CONSTS, post=post, form=form, is_admin=auth(AuthActions.is_admin))
 
+    flash('Post not found')
     return redirect(url_for("bp_post.post_list"))
 
 

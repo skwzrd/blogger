@@ -22,7 +22,11 @@
                             {% for item in items %}
                                 <tr>
                                     {% for a in attributes %}
+                                        {% if a in safe_cols %}
+                                        <td class="text-left">{% if item[a] %} {{item[a] | safe}} {% endif %}</td>
+                                        {% else %}
                                         <td class="text-left">{% if item[a] %} {{item[a]}} {% endif %}</td>
+                                        {% endif %}
                                     {% endfor %}
                                 </tr>
                             {% endfor %}
