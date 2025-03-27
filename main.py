@@ -125,6 +125,11 @@ def after(response):
         db.session.commit()
 
     return response
+    
+
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.gif')
 
 
 @app.route("/", methods=["GET", "POST"])
