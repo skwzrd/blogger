@@ -19,6 +19,8 @@ class CONSTS(NamedTuple):
 
     supported_file_uploads = ["jpg", "gif", "png", "jpeg", "mp4", "webm", "mp3"]
 
+    store_requests = False
+
     MATH_CAPTCHA_FONT = os.path.join(os.path.dirname(__file__), "fonts/tly.ttf")
 
     if not os.path.exists(UPLOADS_FULL_PATH):

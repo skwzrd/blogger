@@ -86,41 +86,43 @@ def internal_server_error(e):
 
 @app.before_request
 def before():
-    g.start_datetime_utc = get_current_datetime("Etc/UTC")
+    if CONSTS.store_requests:
+        g.start_datetime_utc = get_current_datetime("Etc/UTC")
 
-    if app.config["TESTING"]:
-        database_path = make_path(app.config["DATABASE_FILE"])
-        if not os.path.exists(database_path):
-            with app.app_context():
-                build_db()
+        if app.config["TESTING"]:
+            database_path = make_path(app.config["DATABASE_FILE"])
+            if not os.path.exists(database_path):
+                with app.app_context():
+                    build_db()
 
 
 @app.after_request
 def after(response):
-    g.end_datetime_utc = get_current_datetime("Etc/UTC")
+    if CONSTS.store_requests:
+        g.end_datetime_utc = get_current_datetime("Etc/UTC")
 
-    if request.path.startswith("/static/"):
-        return response
+        if request.path.startswith("/static/"):
+            return response
 
-    log = Log(
-        x_forwarded_for=request.headers.get("X-Forwarded-For", None),
-        remote_addr=request.headers.get("Remote-Addr", None),
-        referrer=request.referrer,
-        content_md5=request.content_md5,
-        origin=request.origin,
-        scheme=request.scheme,
-        method=request.method,
-        path=request.path,
-        query_string=request.query_string.decode(),
-        duration=(g.end_datetime_utc - g.start_datetime_utc).total_seconds(),
-        start_datetime_utc=g.start_datetime_utc,
-        end_datetime_utc=g.end_datetime_utc,
-        user_agent=request.user_agent.__str__(),
-        accept_language=request.headers.get("Accept-Language", None),
-        content_length=request.content_length,
-    )
-    db.session.add(log)
-    db.session.commit()
+        log = Log(
+            x_forwarded_for=request.headers.get("X-Forwarded-For", None),
+            remote_addr=request.headers.get("Remote-Addr", None),
+            referrer=request.referrer,
+            content_md5=request.content_md5,
+            origin=request.origin,
+            scheme=request.scheme,
+            method=request.method,
+            path=request.path,
+            query_string=request.query_string.decode(),
+            duration=(g.end_datetime_utc - g.start_datetime_utc).total_seconds(),
+            start_datetime_utc=g.start_datetime_utc,
+            end_datetime_utc=g.end_datetime_utc,
+            user_agent=request.user_agent.__str__(),
+            accept_language=request.headers.get("Accept-Language", None),
+            content_length=request.content_length,
+        )
+        db.session.add(log)
+        db.session.commit()
 
     return response
 
